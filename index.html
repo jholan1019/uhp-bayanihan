@@ -311,7 +311,21 @@ body {
     <!-- Barangay Registration Form -->
     <div class="bg-white p-6 rounded-lg shadow-lg border">
       <h3 class="text-lg font-semibold text-gray-800 mb-4">📝 Register New Barangay</h3>
-      <form id="barangayForm" class="space-y-4">
+      
+      <!-- Admin Login Section for Barangay Registration -->
+      <div id="barangayRegistrationAdminLoginSection" class="bg-white p-4 rounded shadow space-y-4 border-2 border-red-200 mb-6">
+        <div class="text-center">
+          <h4 class="text-sm font-semibold text-red-600 mb-2">🔒 Admin Access Required</h4>
+          <p class="text-xs text-gray-600 mb-4">Enter admin password to register new barangays</p>
+        </div>
+        <div>
+          <label class="block mb-1 font-semibold text-sm">Admin Password</label>
+          <input type="password" id="barangayRegistrationAdminPassword" placeholder="Enter admin password" class="w-full border rounded px-3 py-2 text-sm" required>
+        </div>
+        <button onclick="checkBarangayRegistrationAdminPassword()" class="w-full bg-red-600 text-white py-2 rounded hover:bg-red-700 text-sm font-semibold">🔓 Login as Admin</button>
+      </div>
+      
+      <form id="barangayForm" class="space-y-4" style="display: none;">
         <!-- Address Dropdown System -->
         <div class="space-y-3">
           <label class="block mb-1 font-semibold text-sm">📍 Complete Address</label>
@@ -744,6 +758,20 @@ document.addEventListener('DOMContentLoaded', function() {
 // Sales and e-wallet functions removed - now handled by UHP Ecosystem page
 
 // Barangay form handling
+// Admin login function for barangay registration
+function checkBarangayRegistrationAdminPassword() {
+    const password = document.getElementById('barangayRegistrationAdminPassword').value;
+    if (password === ADMIN_PASSWORD) {
+        document.getElementById('barangayRegistrationAdminLoginSection').style.display = 'none';
+        document.getElementById('barangayForm').style.display = 'block';
+        document.getElementById('barangayRegistrationAdminPassword').value = '';
+        alert('✅ Admin access granted for Barangay Registration!');
+    } else {
+        alert('❌ Incorrect password. Access denied.');
+        document.getElementById('barangayRegistrationAdminPassword').value = '';
+    }
+}
+
 document.getElementById('barangayForm').addEventListener('submit', function(e) {
     e.preventDefault();
     
