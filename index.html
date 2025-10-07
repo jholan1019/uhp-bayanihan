@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home - UHP Bayanihan</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+/* Header Navigation */
+.header {
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    padding: 1rem 0;
+}
+
+.header .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #FFD700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.header .logo i {
+    font-size: 2rem;
+    color: #FFD700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.nav {
+    display: flex;
+    gap: 2rem;
+}
+
+.nav a {
+    color: #FFD700;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.nav a:hover {
+    color: #ffff00;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+body {
+    padding-top: 80px;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #667eea 100%);
+    min-height: 100vh;
+}
+</style>
+</head>
+<body class="bg-gray-100 font-sans text-gray-800" style="font-family: 'Montserrat', sans-serif;">
+
+<!-- Header -->
+<header class="header">
+    <div class="container">
+        <div class="logo">
+            <i class="fas fa-wifi"></i>
+            <span>UHP Bayanihan</span>
+        </div>
+        <nav class="nav">
+            <a href="index.html">Home</a>
+            <a href="uhp-ecosystem.html">UHP Ecosystem</a>
+            <a href="marketing.html">Marketing</a>
+            <a href="wifi-sharer.html">WiFi Sharer</a>
+            <a href="antenna-sponsor.html">Antenna Sponsor</a>
+            <a href="business-card.html">Contact Us</a>
+        </nav>
+    </div>
+</header>
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          primary: '#1e40af',
+          secondary: '#0ea5e9',
+          accent: '#fbbf24',
+        }
+      }
+    }
+  }
+</script>
+
+<!-- Hero Section -->
+<section class="py-20 text-center text-white">
+    <div class="container mx-auto px-6">
+        <h1 class="text-5xl font-bold mb-6">🌐 UHP Bayanihan</h1>
+        <p class="text-xl mb-8">Connecting Communities Through Technology</p>
+        
+        <!-- Page Purpose Alert -->
+        <div class="bg-yellow-500 bg-opacity-20 border border-yellow-300 rounded-lg p-4 mb-8 max-w-4xl mx-auto">
+            <div class="flex items-center justify-center mb-2">
+                <i class="fas fa-info-circle text-yellow-300 mr-2"></i>
+                <h3 class="text-lg font-semibold text-yellow-100">📍 Barangay Deployment Planning</h3>
+            </div>
+            <p class="text-yellow-100 text-sm">
+                Ang page na ito ay para sa <strong>planning at deployment tracking</strong> ng mga barangay na sasali sa UHP program.
+                Para sa <strong>financial management</strong> (sales, e-wallet, commissions), pumunta sa 
+                <a href="uhp-ecosystem.html" class="text-yellow-200 underline font-semibold">UHP Ecosystem</a> page.
+            </p>
+        </div>
+    </div>
+    <h1 class="text-5xl font-bold text-white mb-6">Welcome to UHP Bayanihan</h1>
+    <p class="text-xl text-white/90 mb-8 max-w-3xl mx-auto">Sama-samang Pag-unlad sa Digital na Panahon - Building a connected community through shared internet access and collaborative growth.</p>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mt-12">
+      <!-- UHP Ecosystem Card -->
+      <div class="bg-white/10 backdrop-blur-md p-6 rounded-lg border border-white/20 hover:bg-white/20 transition-all">
+        <div class="text-4xl mb-4">🌐</div>
+        <h3 class="text-xl font-bold text-white mb-3">UHP Ecosystem</h3>
+        <p class="text-white/80 mb-4">Access the complete dashboard and management system</p>
+        <a href="uhp-ecosystem.html" class="inline-block bg-accent text-primary font-bold px-6 py-2 rounded-full hover:bg-accent/80 transition-all">
+          View Dashboard
+        </a>
+      </div>
+      
+      <!-- WiFi Sharer Card -->
+      <div class="bg-white/10 backdrop-blur-md p-6 rounded-lg border border-white/20 hover:bg-white/20 transition-all">
+        <div class="text-4xl mb-4">📶</div>
+        <h3 class="text-xl font-bold text-white mb-3">WiFi Sharer</h3>
+        <p class="text-white/80 mb-4">Learn about our WiFi sharing program and benefits</p>
+        <a href="wifi-sharer.html" class="inline-block bg-accent text-primary font-bold px-6 py-2 rounded-full hover:bg-accent/80 transition-all">
+          Learn More
+        </a>
+      </div>
+      
+      <!-- Marketing Card -->
+      <div class="bg-white/10 backdrop-blur-md p-6 rounded-lg border border-white/20 hover:bg-white/20 transition-all">
+        <div class="text-4xl mb-4">📈</div>
+        <h3 class="text-xl font-bold text-white mb-3">Marketing</h3>
+        <p class="text-white/80 mb-4">Explore our marketing tools and income calculator</p>
+        <a href="marketing.html" class="inline-block bg-accent text-primary font-bold px-6 py-2 rounded-full hover:bg-accent/80 transition-all">
+          Get Started
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- About Section -->
+<section class="py-16 px-4 bg-white/10 backdrop-blur-md">
+  <div class="container mx-auto text-center">
+    <h2 class="text-4xl font-bold text-white mb-8">Ano ang UHP Bayanihan?</h2>
+    <div class="max-w-4xl mx-auto">
+      <p class="text-xl text-white/90 mb-8">
+        UHP Bayanihan ay isang community-based internet sharing platform na naglalayong magbigay ng affordable internet access sa mga Pilipino habang nagbibigay ng income opportunities sa mga miyembro ng komunidad.
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="text-center">
+          <div class="text-3xl mb-3">🤝</div>
+          <h3 class="font-bold text-white mb-2">Community First</h3>
+          <p class="text-white/80 text-sm">Pagkakaisa at bayanihan spirit</p>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl mb-3">💰</div>
+          <h3 class="font-bold text-white mb-2">Income Generation</h3>
+          <p class="text-white/80 text-sm">Passive income opportunities</p>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl mb-3">🌐</div>
+          <h3 class="font-bold text-white mb-2">Digital Inclusion</h3>
+          <p class="text-white/80 text-sm">Internet access para sa lahat</p>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl mb-3">📈</div>
+          <h3 class="font-bold text-white mb-2">Sustainable Growth</h3>
+          <p class="text-white/80 text-sm">Long-term community development</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Dashboard -->
+<section id="dashboard" class="p-8 bg-white">
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-2xl font-bold text-primary">Dashboard Overview</h2>
+  </div>
+  
+  <!-- Centered Barangay Deployment Overview -->
+  <div class="max-w-4xl mx-auto mb-8">
+    <!-- Barangay Deployment Overview Cards -->
+    <div>
+      <h3 class="text-lg font-semibold text-gray-800 mb-4 text-center">🏘️ Barangay Deployment Overview</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="bg-blue-100 p-8 rounded-lg shadow-lg border-l-4 border-primary hover:shadow-xl transition-shadow text-center h-48 w-full flex flex-col justify-center">
+            <h3 class="font-bold text-lg text-gray-700 mb-3">🏘️ Total Barangays</h3>
+            <p class="text-4xl font-bold text-primary mt-2 mb-2" id="totalBarangays">0</p>
+            <p class="text-sm text-gray-600">Registered barangays</p>
+          </div>
+          <div class="bg-green-100 p-8 rounded-lg shadow-lg border-l-4 border-green-500 hover:shadow-xl transition-shadow text-center h-48 w-full flex flex-col justify-center">
+            <h3 class="font-bold text-lg text-gray-700 mb-3">📶 Target WiFi Sharers</h3>
+            <p class="text-4xl font-bold text-green-500 mt-2 mb-2" id="totalTargetWifi">0</p>
+            <p class="text-sm text-gray-600">Across all barangays</p>
+          </div>
+          <div class="bg-purple-100 p-8 rounded-lg shadow-lg border-l-4 border-purple-500 hover:shadow-xl transition-shadow text-center h-48 w-full flex flex-col justify-center">
+            <h3 class="font-bold text-lg text-gray-700 mb-3">📡 Target Antenna Sponsors</h3>
+            <p class="text-4xl font-bold text-purple-500 mt-2 mb-2" id="totalTargetAntenna">0</p>
+            <p class="text-sm text-gray-600">Across all barangays</p>
+          </div>
+          <div class="bg-orange-100 p-8 rounded-lg shadow-lg border-l-4 border-orange-500 hover:shadow-xl transition-shadow text-center h-48 w-full flex flex-col justify-center">
+            <h3 class="font-bold text-lg text-gray-700 mb-3">👥 Target Population</h3>
+            <p class="text-4xl font-bold text-orange-500 mt-2 mb-2" id="totalTargetPopulation">0</p>
+            <p class="text-sm text-gray-600">Total population coverage</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- Hidden file input for import functionality -->
+<input type="file" id="excelFileInput" accept=".xlsx,.xls" class="hidden" onchange="importExcelData(event)">
+
+<!-- Password Modal -->
+<div id="passwordModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+  <div class="bg-white p-6 rounded-lg shadow-xl max-w-md w-full mx-4">
+    <h3 class="text-lg font-bold mb-4">Admin Authentication Required</h3>
+    <p class="text-gray-600 mb-4">Enter admin password to continue:</p>
+    <input type="password" id="passwordInput" placeholder="Enter password" class="w-full border rounded px-3 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+    <div class="flex gap-2 justify-end">
+      <button type="button" onclick="closePasswordModal()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">Cancel</button>
+      <button type="button" onclick="submitPassword()" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Submit</button>
+    </div>
+  </div>
+</div>
+
+<!-- Barangay Deployment Section -->
+<section id="barangay" class="p-8 bg-white">
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-2xl font-bold">🏘️ Barangay Deployment</h2>
+    <div class="flex gap-2">
+      <button onclick="showPasswordModal('export')" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 shadow-md transition-all transform hover:scale-105 font-bold text-sm flex items-center justify-center">
+        <i class="fas fa-download mr-2"></i>
+        Export Data
+      </button>
+      <button onclick="showPasswordModal('import')" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 shadow-md transition-all transform hover:scale-105 font-bold text-sm flex items-center justify-center">
+        <i class="fas fa-upload mr-2"></i>
+        Import Data
+      </button>
+    </div>
+  </div>
+  
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Barangay Registration Form -->
+    <div class="bg-white p-6 rounded-lg shadow-lg border">
+      <h3 class="text-lg font-semibold text-gray-800 mb-4">📝 Register New Barangay</h3>
+      <form id="barangayForm" class="space-y-4">
+        <div>
+          <label class="block mb-1 font-semibold text-sm">Barangay Name</label>
+          <input type="text" id="barangayName" placeholder="Enter barangay name" class="w-full border rounded px-3 py-2 text-sm" required>
+        </div>
+        <div>
+          <label class="block mb-1 font-semibold text-sm">Municipality/City</label>
+          <input type="text" id="barangayMunicipality" placeholder="Enter municipality/city" class="w-full border rounded px-3 py-2 text-sm" required>
+        </div>
+        <div>
+          <label class="block mb-1 font-semibold text-sm">Province</label>
+          <input type="text" id="barangayProvince" placeholder="Enter province" class="w-full border rounded px-3 py-2 text-sm" required>
+        </div>
+        <div>
+          <label class="block mb-1 font-semibold text-sm">Population</label>
+          <input type="number" id="barangayPopulation" placeholder="Enter estimated population" class="w-full border rounded px-3 py-2 text-sm" required>
+        </div>
+        <div>
+          <label class="block mb-1 font-semibold text-sm">Target WiFi Sharers</label>
+          <input type="number" id="barangayTargetWifi" placeholder="Enter target number of WiFi sharers" class="w-full border rounded px-3 py-2 text-sm" required>
+        </div>
+        <div>
+          <label class="block mb-1 font-semibold text-sm">Target Antenna Sponsors</label>
+          <input type="number" id="barangayTargetAntenna" placeholder="Enter target number of antenna sponsors" class="w-full border rounded px-3 py-2 text-sm" required>
+        </div>
+        <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 text-sm font-semibold">Register Barangay</button>
+      </form>
+    </div>
+
+    <!-- Barangay Statistics -->
+    <div class="bg-white p-6 rounded-lg shadow-lg border">
+      <h3 class="text-lg font-semibold text-gray-800 mb-4">📊 Deployment Statistics</h3>
+      <div class="space-y-4">
+        <div class="bg-blue-100 p-4 rounded-lg">
+          <h4 class="font-bold text-blue-800">Total Barangays</h4>
+          <p class="text-2xl font-bold text-blue-600" id="totalBarangays">0</p>
+        </div>
+        <div class="bg-green-100 p-4 rounded-lg">
+          <h4 class="font-bold text-green-800">Total Target WiFi Sharers</h4>
+          <p class="text-2xl font-bold text-green-600" id="totalTargetWifi">0</p>
+        </div>
+        <div class="bg-purple-100 p-4 rounded-lg">
+          <h4 class="font-bold text-purple-800">Total Target Antenna Sponsors</h4>
+          <p class="text-2xl font-bold text-purple-600" id="totalTargetAntenna">0</p>
+        </div>
+        <div class="bg-gray-100 p-4 rounded-lg">
+          <h4 class="font-bold text-gray-800">Total Target Population</h4>
+          <p class="text-2xl font-bold text-gray-600" id="totalTargetPopulation">0</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Barangay List -->
+  <div class="mt-8">
+    <h3 class="text-xl font-bold mb-4">🏘️ Registered Barangays</h3>
+    <div class="overflow-x-auto">
+      <table class="min-w-full bg-white rounded shadow">
+        <thead class="bg-gray-200">
+          <tr>
+            <th class="p-2 text-left">Barangay ID</th>
+            <th class="p-2 text-left">Barangay Name</th>
+            <th class="p-2 text-left">Municipality/City</th>
+            <th class="p-2 text-left">Province</th>
+            <th class="p-2 text-left">Population</th>
+            <th class="p-2 text-left">Target WiFi</th>
+            <th class="p-2 text-left">Target Antenna</th>
+            <th class="p-2 text-left">Registration Date</th>
+          </tr>
+        </thead>
+        <tbody id="barangayTable"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<script>
+// Global variables - Barangay deployment data only
+let barangayData = JSON.parse(localStorage.getItem('barangayData')) || [
+    {
+        name: 'Barangay San Jose',
+        captain: 'Juan Dela Cruz',
+        contact: '09123456789',
+        email: 'sanjose@example.com',
+        population: 5000,
+        households: 1200,
+        status: 'Active',
+        targetWifi: 50,
+        targetAntenna: 10
+    },
+    {
+        name: 'Barangay Santa Maria',
+        captain: 'Maria Santos',
+        contact: '09987654321',
+        email: 'santamaria@example.com',
+        population: 3500,
+        households: 800,
+        status: 'Active',
+        targetWifi: 35,
+        targetAntenna: 8
+    },
+    {
+        name: 'Barangay San Antonio',
+        captain: 'Pedro Garcia',
+        contact: '09555123456',
+        email: 'sanantonio@example.com',
+        population: 4200,
+        households: 1000,
+        status: 'Pending',
+        targetWifi: 42,
+        targetAntenna: 12
+    }
+];
+
+// Admin password
+const ADMIN_PASSWORD = 'admin123';
+let isAdminLoggedIn = false;
+
+// Initialize the application
+document.addEventListener('DOMContentLoaded', function() {
+    updateDashboard();
+    updateBarangayTable();
+    updateBarangayStats();
+});
+
+// Registration functions removed - now handled by UHP Ecosystem page
+
+// Sales and e-wallet functions removed - now handled by UHP Ecosystem page
+
+// Barangay form handling
+document.getElementById('barangayForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const barangay = {
+        id: 'BRG' + String(barangayData.length + 1).padStart(3, '0'),
+        name: document.getElementById('barangayName').value,
+        municipality: document.getElementById('barangayMunicipality').value,
+        province: document.getElementById('barangayProvince').value,
+        population: parseInt(document.getElementById('barangayPopulation').value),
+        targetWifi: parseInt(document.getElementById('barangayTargetWifi').value),
+        targetAntenna: parseInt(document.getElementById('barangayTargetAntenna').value),
+        registrationDate: new Date().toLocaleDateString()
+    };
+    
+    barangayData.push(barangay);
+    localStorage.setItem('barangayData', JSON.stringify(barangayData));
+    
+    document.getElementById('barangayForm').reset();
+    updateBarangayTable();
+    updateBarangayStats();
+    
+    alert('Barangay registered successfully!');
+});
+
+// Admin functions removed - now handled by UHP Ecosystem page
+
+// Update functions
+function updateDashboard() {
+    // Dashboard now focuses on Barangay deployment statistics
+    const totalBarangays = barangayData.length;
+    const deployedBarangays = barangayData.filter(b => b.status === 'Deployed').length;
+    const pendingBarangays = barangayData.filter(b => b.status === 'Pending').length;
+    const inProgressBarangays = barangayData.filter(b => b.status === 'In Progress').length;
+    
+    // Update dashboard cards with Barangay deployment data
+    const totalSalesElement = document.getElementById('totalSales');
+    if (totalSalesElement) totalSalesElement.textContent = totalBarangays;
+    
+    const totalWiFiPersonalElement = document.getElementById('totalWiFiPersonal');
+    if (totalWiFiPersonalElement) totalWiFiPersonalElement.textContent = deployedBarangays;
+    
+    const sharedPoolElement = document.getElementById('sharedPool');
+    if (sharedPoolElement) sharedPoolElement.textContent = pendingBarangays;
+    
+    const valuePerShareElement = document.getElementById('valuePerShare');
+    if (valuePerShareElement) valuePerShareElement.textContent = inProgressBarangays;
+    
+    // Update other elements if they exist
+    const agentsShareElement = document.getElementById('agentsShare');
+    if (agentsShareElement) agentsShareElement.textContent = '0';
+    
+    const opexShareElement = document.getElementById('opexShare');
+    if (opexShareElement) opexShareElement.textContent = '0';
+    
+    const totalSharesElement = document.getElementById('totalShares');
+    if (totalSharesElement) totalSharesElement.textContent = '0';
+    
+    const ewalletIncomeElement = document.getElementById('ewalletIncome');
+    if (ewalletIncomeElement) ewalletIncomeElement.textContent = '0';
+    
+    const ewalletToWifiSharersElement = document.getElementById('ewalletToWifiSharers');
+    if (ewalletToWifiSharersElement) ewalletToWifiSharersElement.textContent = '0';
+}
+
+// Financial functions removed - now handled by UHP Ecosystem page
+
+// Registration tables function removed - now handled by UHP Ecosystem page
+
+function updateBarangayTable() {
+    const barangayTable = document.getElementById('barangayTable');
+    barangayTable.innerHTML = '';
+    
+    barangayData.forEach(barangay => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td class="p-2 border-b">${barangay.id}</td>
+            <td class="p-2 border-b">${barangay.name}</td>
+            <td class="p-2 border-b">${barangay.municipality}</td>
+            <td class="p-2 border-b">${barangay.province}</td>
+            <td class="p-2 border-b">${barangay.population.toLocaleString()}</td>
+            <td class="p-2 border-b">${barangay.targetWifi}</td>
+            <td class="p-2 border-b">${barangay.targetAntenna}</td>
+            <td class="p-2 border-b">${barangay.registrationDate}</td>
+        `;
+        barangayTable.appendChild(row);
+    });
+}
+
+function updateBarangayStats() {
+    const totalBarangays = barangayData.length;
+    const totalTargetWifi = barangayData.reduce((sum, b) => sum + b.targetWifi, 0);
+    const totalTargetAntenna = barangayData.reduce((sum, b) => sum + b.targetAntenna, 0);
+    const totalTargetPopulation = barangayData.reduce((sum, b) => sum + b.population, 0);
+    
+    document.getElementById('totalBarangays').textContent = totalBarangays;
+    document.getElementById('totalTargetWifi').textContent = totalTargetWifi;
+    document.getElementById('totalTargetAntenna').textContent = totalTargetAntenna;
+    document.getElementById('totalTargetPopulation').textContent = totalTargetPopulation.toLocaleString();
+}
+
+// Dropdown population functions removed - now handled by UHP Ecosystem page
+
+// Modal-based authentication system
+let currentAction = null;
+
+function showPasswordModal(action) {
+    currentAction = action;
+    document.getElementById('passwordModal').classList.remove('hidden');
+    document.getElementById('passwordInput').focus();
+    
+    // Add keyboard event listeners
+    document.addEventListener('keydown', handleModalKeydown);
+}
+
+function handleModalKeydown(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        submitPassword();
+    } else if (event.key === 'Escape') {
+        event.preventDefault();
+        closePasswordModal();
+    }
+}
+
+function closePasswordModal() {
+    document.getElementById('passwordModal').classList.add('hidden');
+    document.getElementById('passwordInput').value = '';
+    currentAction = null;
+    
+    // Remove keyboard event listeners
+    document.removeEventListener('keydown', handleModalKeydown);
+}
+
+function submitPassword() {
+    const password = document.getElementById('passwordInput').value.trim();
+    
+    if (password !== 'admin123') {
+        alert('Incorrect password!');
+        document.getElementById('passwordInput').value = '';
+        document.getElementById('passwordInput').focus();
+        return;
+    }
+    
+    closePasswordModal();
+    
+    if (currentAction === 'export') {
+        exportBarangayData();
+    } else if (currentAction === 'import') {
+        document.getElementById('excelFileInput').click();
+    }
+}
+
+// Excel export/import functions for Barangay deployment
+function exportAllDataWithPassword() {
+    showPasswordModal('export');
+}
+
+function exportBarangayData() {
+    if (barangayData.length === 0) {
+        alert('No barangay data to export!');
+        return;
+    }
+    
+    try {
+        const workbook = XLSX.utils.book_new();
+        const barangayWS = XLSX.utils.json_to_sheet(barangayData);
+        XLSX.utils.book_append_sheet(workbook, barangayWS, 'Barangay Deployment');
+        XLSX.writeFile(workbook, 'UHP_Barangay_Deployment.xlsx');
+        alert('Export successful! File downloaded.');
+    } catch (error) {
+        alert('Export failed: ' + error.message);
+    }
+}
+
+function importExcelWithPasswordPrompt() {
+    showPasswordModal('import');
+}
+
+function importExcelData(event) {
+    const file = event.target.files[0];
+    if (!file) {
+        alert('No file selected!');
+        return;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, {type: 'array'});
+            
+            // Import Barangay Deployment sheet only
+            if (workbook.SheetNames.includes('Barangay Deployment')) {
+                const barangaySheet = workbook.Sheets['Barangay Deployment'];
+                barangayData = XLSX.utils.sheet_to_json(barangaySheet);
+                localStorage.setItem('barangayData', JSON.stringify(barangayData));
+                updateBarangayStats();
+                updateBarangayTable();
+                alert('Successfully imported ' + barangayData.length + ' barangay records!');
+            } else if (workbook.SheetNames.includes('Barangay Data')) {
+                // Fallback for old format
+                const barangaySheet = workbook.Sheets['Barangay Data'];
+                barangayData = XLSX.utils.sheet_to_json(barangaySheet);
+                localStorage.setItem('barangayData', JSON.stringify(barangayData));
+                updateBarangayStats();
+                updateBarangayTable();
+                alert('Successfully imported ' + barangayData.length + ' barangay records!');
+            } else {
+                alert('No valid sheet found in the Excel file! Available sheets: ' + workbook.SheetNames.join(', '));
+                return;
+            }
+        } catch (error) {
+            alert('Import failed: ' + error.message);
+        }
+    };
+    
+    reader.readAsArrayBuffer(file);
+}
+
+function clearAllDataWithPassword() {
+    const password = prompt('Enter admin password to clear barangay deployment data:');
+    if (password !== ADMIN_PASSWORD) {
+        alert('Incorrect password!');
+        return;
+    }
+    
+    const confirm = prompt('Type "DELETE BARANGAY" to confirm barangay data deletion:');
+    if (confirm !== 'DELETE BARANGAY') {
+        alert('Data deletion cancelled.');
+        return;
+    }
+    
+    // Clear barangay data only
+    barangayData = [];
+    
+    // Clear localStorage
+    localStorage.removeItem('barangayData');
+    
+    // Refresh barangay displays only
+    updateBarangayTable();
+    updateBarangayStats();
+    
+    alert('Barangay deployment data has been cleared!');
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,2383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UHP Bayanihan Ecosystem - Dashboard</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+/* Header Navigation */
+.header {
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    padding: 1rem 0;
+}
+
+.header .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #FFD700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.header .logo i {
+    font-size: 2rem;
+    color: #FFD700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.nav {
+    display: flex;
+    gap: 2rem;
+}
+
+.nav a {
+    color: #FFD700;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.nav a:hover {
+    color: #ffff00;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+body {
+    padding-top: 80px;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #667eea 100%);
+    min-height: 100vh;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background-color: white;
+    margin: 15% auto;
+    padding: 30px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    text-align: center;
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.modal h3 {
+    color: #1e40af;
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.modal input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    margin: 10px 0;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.modal input:focus {
+    outline: none;
+    border-color: #1e40af;
+    box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.modal-btn {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.modal-btn-primary {
+    background-color: #1e40af;
+    color: white;
+}
+
+.modal-btn-primary:hover {
+    background-color: #1d4ed8;
+    transform: translateY(-1px);
+}
+
+.modal-btn-secondary {
+    background-color: #6b7280;
+    color: white;
+}
+
+.modal-btn-secondary:hover {
+    background-color: #4b5563;
+    transform: translateY(-1px);
+}
+
+.modal-btn-danger {
+    background-color: #dc2626;
+    color: white;
+}
+
+.modal-btn-danger:hover {
+    background-color: #b91c1c;
+    transform: translateY(-1px);
+}
+</style>
+</head>
+<body class="bg-gray-100 font-sans text-gray-800" style="font-family: 'Montserrat', sans-serif;">
+
+<!-- Header -->
+<header class="header">
+    <div class="container">
+        <div class="logo">
+            <i class="fas fa-wifi"></i>
+            <span>UHP Bayanihan</span>
+        </div>
+        <nav class="nav">
+            <a href="index.html">Home</a>
+            <a href="uhp-ecosystem.html">UHP Ecosystem</a>
+            <a href="marketing.html">Marketing</a>
+            <a href="wifi-sharer.html">WiFi Sharer</a>
+            <a href="antenna-sponsor.html">Antenna Sponsor</a>
+            <a href="business-card.html">Contact Us</a>
+        </nav>
+    </div>
+</header>
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          primary: '#1e40af',
+          secondary: '#0ea5e9',
+          accent: '#fbbf24',
+        }
+      }
+    }
+  }
+</script>
+
+<!-- Hero Section -->
+<section class="bg-gradient-to-b from-primary/10 to-secondary/5 py-12 px-4">
+  <div class="container mx-auto text-center">
+    <h2 class="text-4xl font-bold mb-4" style="color: #FFD700; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);">💰 UHP Bayanihan Ecosystem</h2>
+    <p class="text-xl mb-8" style="color: #FFD700; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); font-weight: 600;">Financial Management & Operations Center</p>
+    
+    <!-- Page Purpose Alert -->
+    <div class="max-w-4xl mx-auto bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+      <div class="flex items-center justify-center mb-2">
+        <i class="fas fa-chart-line text-blue-600 mr-2"></i>
+        <h3 class="text-lg font-semibold text-blue-800">💼 Financial Operations Center</h3>
+      </div>
+      <p class="text-blue-700 text-sm">
+        Ang page na ito ay para sa <strong>daily financial operations</strong> - member registration, sales tracking, e-wallet management, at commission calculations.
+        Para sa <strong>barangay deployment planning</strong>, bumalik sa 
+        <a href="index.html" class="text-blue-600 underline font-semibold">Home</a> page.
+      </p>
+    </div>
+    
+    <div class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-lg">
+      <p class="text-gray-700 mb-4">Welcome to the UHP Bayanihan Ecosystem platform where we manage our community-based internet sharing initiative.</p>
+      <a href="#dashboard" class="inline-block bg-accent text-primary font-bold px-6 py-3 rounded-full hover:bg-accent/80 transition-all transform hover:scale-105">View Dashboard</a>
+    </div>
+  </div>
+</section>
+
+<!-- Dashboard -->
+<section id="dashboard" class="p-8 bg-white">
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-2xl font-bold text-primary">Dashboard Overview</h2>
+  </div>
+  
+  <!-- Two Column Layout: Charts Left, Cards Right -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+    
+    <!-- Left Side: Bar Charts and Registration Form -->
+    <div class="space-y-6">
+      <!-- Sales Bar Chart -->
+      <div class="bg-white p-6 rounded-lg shadow-lg border">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">📊 Sales Overview</h3>
+        
+        <!-- Vertical Bar Chart Container -->
+        <div class="flex items-end justify-center space-x-8 h-48 mb-6">
+          <!-- Voucher Sales Bar -->
+          <div class="flex flex-col items-center">
+            <div class="bg-gray-200 w-16 h-40 rounded-t-lg flex items-end">
+              <div class="bg-blue-500 w-full rounded-t-lg transition-all duration-500 flex items-end justify-center" id="voucherSalesBar" style="height: 0%">
+                <span class="text-white text-xs font-bold mb-1 transform rotate-90 origin-center" id="voucherBarText" style="display: none;">₱0</span>
+              </div>
+            </div>
+            <div class="mt-2 text-center">
+              <div class="text-xs font-medium text-gray-700">💳 Voucher</div>
+              <div class="text-sm font-bold text-blue-600" id="chartVoucherSales">₱0</div>
+            </div>
+          </div>
+          
+          <!-- E-Wallet Income Bar -->
+          <div class="flex flex-col items-center">
+            <div class="bg-gray-200 w-16 h-40 rounded-t-lg flex items-end">
+              <div class="bg-green-500 w-full rounded-t-lg transition-all duration-500 flex items-end justify-center" id="ewalletSalesBar" style="height: 0%">
+                <span class="text-white text-xs font-bold mb-1 transform rotate-90 origin-center" id="ewalletBarText" style="display: none;">₱0</span>
+              </div>
+            </div>
+            <div class="mt-2 text-center">
+              <div class="text-xs font-medium text-gray-700">💰 E-Wallet</div>
+              <div class="text-sm font-bold text-green-600" id="chartEwalletSales">₱0</div>
+            </div>
+          </div>
+          
+          <!-- Total Combined Bar -->
+          <div class="flex flex-col items-center">
+            <div class="bg-gray-200 w-20 h-40 rounded-t-lg flex items-end">
+              <div class="bg-purple-500 w-full rounded-t-lg transition-all duration-500 flex items-end justify-center" id="totalSalesBar" style="height: 0%">
+                <span class="text-white text-xs font-bold mb-1 transform rotate-90 origin-center" id="totalBarText" style="display: none;">₱0</span>
+              </div>
+            </div>
+            <div class="mt-2 text-center">
+              <div class="text-xs font-bold text-gray-800">📈 Total</div>
+              <div class="text-lg font-bold text-purple-600" id="chartTotalSales">₱0</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Date Information -->
+        <div class="text-center mt-4">
+          <p class="text-sm text-gray-600">as of <span id="currentMonth" class="font-semibold"></span></p>
+        </div>
+      </div>
+
+      <!-- Data Management Section -->
+      <div class="bg-white p-6 rounded-lg shadow-lg border">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">📊 Data Management (Admin Only)</h3>
+        
+        <!-- Admin Login Section for Data Management -->
+        <div id="dataAdminLoginSection" class="bg-white p-4 rounded shadow space-y-4 border-2 border-red-200">
+          <div class="text-center">
+            <h4 class="text-sm font-semibold text-red-600 mb-2">🔒 Admin Access Required</h4>
+            <p class="text-xs text-gray-600 mb-4">Enter admin password to access data management</p>
+          </div>
+          <div>
+            <label class="block mb-1 font-semibold text-sm">Admin Password</label>
+            <input type="password" id="dataAdminPassword" placeholder="Enter admin password" class="w-full border rounded px-3 py-2 text-sm" required>
+          </div>
+          <button onclick="checkDataAdminPassword()" class="w-full bg-red-600 text-white py-2 rounded hover:bg-red-700 text-sm font-semibold">🔓 Login as Admin</button>
+        </div>
+
+        <!-- Data Management Options (Hidden by default) -->
+        <div id="dataManagementSection" class="bg-white p-4 rounded shadow space-y-4 border-2 border-green-200" style="display: none;">
+          <div class="text-center">
+            <h4 class="text-sm font-semibold text-green-600 mb-2">✅ Admin Access Granted</h4>
+            <button onclick="logoutDataAdmin()" class="text-xs text-red-600 hover:underline mb-4">🚪 Logout</button>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <button onclick="exportAllDataWithPassword()" class="bg-accent text-primary px-4 py-3 rounded-lg hover:bg-accent/80 shadow-md transition-all transform hover:scale-105 font-bold text-sm flex items-center justify-center">
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+              Export Financial Data to Excel
+            </button>
+            <div class="relative">
+              <input type="file" id="excelFileInput" accept=".xlsx,.xls" class="hidden">
+              <input type="file" id="comprehensiveReportFile" accept=".xlsx,.xls" class="hidden">
+              <button onclick="importExcelWithPasswordPrompt()" class="w-full bg-green-500 text-white px-4 py-3 rounded-lg hover:bg-green-600 shadow-md transition-all transform hover:scale-105 font-bold text-sm flex items-center justify-center">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path>
+                </svg>
+                Import Financial Data
+              </button>
+            </div>
+            <button onclick="clearAllDataWithPassword()" class="bg-red-500 text-white px-4 py-3 rounded-lg hover:bg-red-600 shadow-md transition-all transform hover:scale-105 font-bold text-sm flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+              Clear All Data (Admin)
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Side: All Cards -->
+    <div class="space-y-6">
+      <!-- Main Financial Overview Cards -->
+      <div>
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">💰 Financial Overview</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-blue-100 p-4 rounded-lg shadow-md border-l-4 border-primary hover:shadow-lg transition-shadow text-center">
+            <h3 class="font-bold text-sm text-gray-700">💰 Total Sales</h3>
+            <p class="text-2xl font-bold text-primary mt-1" id="totalSales">₱0</p>
+            <p class="text-xs text-gray-600 mt-1">All revenue sources</p>
+          </div>
+          <div class="bg-purple-100 p-4 rounded-lg shadow-md border-l-4 border-secondary hover:shadow-lg transition-shadow text-center">
+            <h3 class="font-bold text-sm text-gray-700">🏠 WiFi Personal (40%)</h3>
+            <p class="text-2xl font-bold text-secondary mt-1" id="totalWiFiPersonal">₱0</p>
+            <p class="text-xs text-gray-600 mt-1">Personal revenue share</p>
+          </div>
+          <div class="bg-orange-100 p-4 rounded-lg shadow-md border-l-4 border-accent hover:shadow-lg transition-shadow text-center">
+            <h3 class="font-bold text-sm text-gray-700">🤝 Community Pool</h3>
+            <p class="text-2xl font-bold text-accent mt-1" id="sharedPool">₱0</p>
+            <p class="text-xs text-gray-600 mt-1">50% voucher sales + 70% ewallet income</p>
+            <div class="flex justify-between mt-2 text-xs">
+              <div class="text-left">
+                <span class="text-gray-500">50% Voucher:</span>
+                <span class="font-semibold text-blue-600" id="voucherPoolAmount">₱0</span>
+              </div>
+              <div class="text-right">
+                <span class="text-gray-500">70% E-wallet:</span>
+                <span class="font-semibold text-green-600" id="ewalletPoolAmount">₱0</span>
+              </div>
+            </div>
+          </div>
+          <div class="bg-green-100 p-4 rounded-lg shadow-md border-l-4 border-green-500 hover:shadow-lg transition-shadow text-center">
+            <h3 class="font-bold text-sm text-gray-700">📈 Value per Share</h3>
+            <p class="text-2xl font-bold text-green-500 mt-1" id="valuePerShare">₱0</p>
+            <p class="text-xs text-gray-600 mt-1">Per member share</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Commission & Expenses Cards -->
+      <div>
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">💼 Commission & Expenses</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="bg-red-100 p-4 rounded-lg shadow-md border-l-4 border-red-500 hover:shadow-lg transition-shadow text-center">
+            <h3 class="font-bold text-sm text-gray-700">👥 Agent Commission</h3>
+            <p class="text-2xl font-bold text-red-500 mt-1" id="agentsShare">₱0</p>
+            <p class="text-xs text-gray-600 mt-1">5% of total sales</p>
+          </div>
+          <div class="bg-yellow-100 p-4 rounded-lg shadow-md border-l-4 border-yellow-500 hover:shadow-lg transition-shadow text-center">
+            <h3 class="font-bold text-sm text-gray-700">⚙️ Operational Expenses</h3>
+            <p class="text-2xl font-bold text-yellow-600 mt-1" id="opexShare">₱0</p>
+            <p class="text-xs text-gray-600 mt-1">5% of total sales</p>
+          </div>
+          <div class="bg-gray-200 p-4 rounded-lg shadow-md border-l-4 border-gray-500 hover:shadow-lg transition-shadow text-center">
+            <h3 class="font-bold text-sm text-gray-700">📊 Total Shares</h3>
+            <p class="text-2xl font-bold text-gray-700 mt-1" id="totalShares">0</p>
+            <div class="text-xs text-gray-600 mt-2 space-y-1">
+              <div class="flex justify-between">
+                <span>📶 WiFi Sharers:</span>
+                <span id="wifiSharerCount">0</span>
+              </div>
+              <div class="flex justify-between">
+                <span>📡 Antenna Sponsors:</span>
+                <span id="antennaSponsorCount">0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- E-Wallet Income Cards -->
+      <div>
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">💳 E-Wallet Income</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-indigo-100 p-4 rounded-lg shadow-md border-l-4 border-indigo-500 hover:shadow-lg transition-shadow text-center">
+            <h3 class="font-bold text-sm text-gray-700">💳 Total E-Wallet Income</h3>
+            <p class="text-2xl font-bold text-indigo-600 mt-1" id="ewalletIncome">₱0</p>
+            <p class="text-xs text-gray-600 mt-1">All e-wallet transactions</p>
+          </div>
+          <div class="bg-cyan-100 p-4 rounded-lg shadow-md border-l-4 border-cyan-500 hover:shadow-lg transition-shadow text-center">
+            <h3 class="font-bold text-sm text-gray-700">📊 70% to WiFi Sharers & Antenna Sponsors</h3>
+            <p class="text-2xl font-bold text-cyan-600 mt-1" id="ewalletToWifiSharers">₱0</p>
+            <p class="text-xs text-gray-600 mt-1">Distributed to all shareholders</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sales Input and E-Wallet Side by Side (Full Width) -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+    
+    <!-- Sales Input Section -->
+    <div class="bg-white p-6 rounded-lg shadow-lg border">
+      <h3 class="text-lg font-semibold text-gray-800 mb-4">💰 Sales Input (Admin Only)</h3>
+      
+      <!-- Admin Login Section for Sales -->
+      <div id="salesAdminLoginSection" class="bg-white p-4 rounded shadow space-y-4 border-2 border-red-200">
+        <div class="text-center">
+          <h4 class="text-sm font-semibold text-red-600 mb-2">🔒 Admin Access Required</h4>
+          <p class="text-xs text-gray-600 mb-4">Enter admin password to access sales input</p>
+        </div>
+        <div>
+          <label class="block mb-1 font-semibold text-sm">Admin Password</label>
+          <input type="password" id="salesAdminPassword" placeholder="Enter admin password" class="w-full border rounded px-3 py-2 text-sm" required>
+        </div>
+        <button onclick="checkSalesAdminPassword()" class="w-full bg-red-600 text-white py-2 rounded hover:bg-red-700 text-sm font-semibold">🔓 Login as Admin</button>
+      </div>
+
+      <!-- Sales Form (Hidden by default) -->
+      <div id="salesFormSection" class="bg-white p-4 rounded shadow space-y-4 border-2 border-green-200" style="display: none;">
+        <div class="text-center">
+          <h4 class="text-sm font-semibold text-green-600 mb-2">✅ Admin Access Granted</h4>
+          <button onclick="logoutSalesAdmin()" class="text-xs text-red-600 hover:underline mb-4">🚪 Logout</button>
+        </div>
+        <form id="salesForm" class="space-y-4">
+          <div>
+            <label class="block mb-1 font-semibold text-sm">Select WiFi Sharer</label>
+            <select id="salesPartner" class="w-full border rounded px-3 py-2 text-sm" required></select>
+          </div>
+          <div>
+            <label class="block mb-1 font-semibold text-sm">Sales Amount (₱)</label>
+            <input type="number" id="salesAmount" placeholder="Enter sales amount" class="w-full border rounded px-3 py-2 text-sm" required>
+          </div>
+          <button type="submit" class="w-full bg-green-700 text-white py-2 rounded hover:bg-green-800 text-sm font-semibold">Submit Sales</button>
+        </form>
+      </div>
+
+      <div class="mt-4 overflow-x-auto">
+        <h4 class="font-bold mb-2 text-sm">Sales List</h4>
+        <table class="min-w-full bg-white rounded shadow text-xs">
+          <thead class="bg-green-200">
+            <tr>
+              <th class="p-2 text-left w-24">WiFi Sharer ID</th>
+              <th class="p-2 text-left w-48">WiFi Sharer Name</th>
+              <th class="p-2 text-left w-36">Agent</th>
+              <th class="p-2 text-left w-28">Amount</th>
+            </tr>
+          </thead>
+          <tbody id="salesList"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- E-Wallet Income Input Section -->
+    <div class="bg-white p-6 rounded-lg shadow-lg border">
+      <h3 class="text-lg font-semibold text-gray-800 mb-4">🔐 E-Wallet Income Input (Admin Only)</h3>
+      
+      <!-- Admin Login Section -->
+      <div id="adminLoginSection" class="bg-white p-4 rounded shadow space-y-4 border-2 border-red-200">
+        <div class="text-center">
+          <h4 class="text-sm font-semibold text-red-600 mb-2">🔒 Admin Access Required</h4>
+          <p class="text-xs text-gray-600 mb-4">Enter admin password to access e-wallet income input</p>
+        </div>
+        <div>
+          <label class="block mb-1 font-semibold text-sm">Admin Password</label>
+          <input type="password" id="adminPassword" placeholder="Enter admin password" class="w-full border rounded px-3 py-2 text-sm" required>
+        </div>
+        <button onclick="checkAdminPassword()" class="w-full bg-red-600 text-white py-2 rounded hover:bg-red-700 text-sm font-semibold">🔓 Login as Admin</button>
+      </div>
+
+      <!-- E-Wallet Form (Hidden by default) -->
+      <div id="ewalletFormSection" class="bg-white p-4 rounded shadow space-y-4 border-2 border-green-200" style="display: none;">
+        <div class="text-center">
+          <h4 class="text-sm font-semibold text-green-600 mb-2">✅ Admin Access Granted</h4>
+          <button onclick="logoutAdmin()" class="text-xs text-red-600 hover:underline mb-4">🚪 Logout</button>
+        </div>
+        <form id="ewalletForm">
+          <div>
+            <label class="block mb-1 font-semibold text-sm">E-Wallet Income Amount (₱)</label>
+            <input type="number" id="ewalletAmount" placeholder="Enter e-wallet income" class="w-full border rounded px-3 py-2 text-sm" required>
+          </div>
+          <div>
+            <label class="block mb-1 font-semibold text-sm">Description</label>
+            <input type="text" id="ewalletDescription" value="Gcash" class="w-full border rounded px-3 py-2 text-sm" readonly>
+          </div>
+          <button type="submit" class="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 text-sm font-semibold">💳 Add E-Wallet Income</button>
+        </form>
+      </div>
+
+      <div class="mt-4 overflow-x-auto">
+        <h4 class="font-bold mb-2 text-sm">E-Wallet Income List</h4>
+        <table class="min-w-full bg-white rounded shadow text-xs">
+          <thead class="bg-indigo-200">
+            <tr><th class="p-1">Date</th><th class="p-1">Amount</th><th class="p-1">Description</th></tr>
+          </thead>
+          <tbody id="ewalletList"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Member Registration Form -->
+    <div class="mt-8 max-w-2xl mx-auto">
+      <div class="bg-white p-6 rounded-lg shadow-lg border">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">📝 Member Registration</h3>
+        
+        <!-- Registration Type Selector -->
+        <div class="mb-4">
+          <label class="block mb-2 font-semibold">Select Registration Type:</label>
+          <select id="registrationType" class="w-full border-2 border-blue-300 rounded-lg px-3 py-2 text-sm font-medium bg-white">
+            <option value="">-- Choose Registration Type --</option>
+            <option value="agent">👥 UHP Agent</option>
+            <option value="wifi">📶 WiFi Sharer</option>
+            <option value="antenna">📡 Antenna Sponsor</option>
+          </select>
+        </div>
+
+        <!-- Unified Registration Form -->
+        <div id="unifiedFormContainer" style="display: none;">
+          <form id="unifiedForm" class="space-y-3 border-2 p-4 rounded-lg bg-gray-50">
+            
+            <!-- Common Fields -->
+            <div>
+              <label class="block mb-1 font-semibold text-sm">Full Name</label>
+              <input type="text" id="memberName" placeholder="Enter full name" class="w-full border rounded px-3 py-2 text-sm" required>
+            </div>
+            
+            <div>
+              <label class="block mb-1 font-semibold text-sm">Phone Number</label>
+              <input type="text" id="memberPhone" placeholder="Enter phone number" class="w-full border rounded px-3 py-2 text-sm" required>
+            </div>
+            
+            <div>
+              <label class="block mb-1 font-semibold text-sm">Address</label>
+              <input type="text" id="memberAddress" placeholder="Enter address" class="w-full border rounded px-3 py-2 text-sm" required>
+            </div>
+
+            <!-- Agent Selection (for WiFi Sharer and Antenna Sponsor) -->
+            <div id="agentSelectionField" style="display: none;">
+              <label class="block mb-1 font-semibold text-sm">Select Agent</label>
+              <select id="memberAgent" class="w-full border rounded px-3 py-2 text-sm"></select>
+            </div>
+
+            <!-- WiFi Sharer Specific Fields -->
+            <div id="wifiSpecificFields" style="display: none;">
+              <div>
+                <label class="block mb-1 font-semibold text-sm">Barangay</label>
+                <input type="text" id="memberBarangay" placeholder="Enter barangay" class="w-full border rounded px-3 py-2 text-sm">
+              </div>
+              <div>
+                <label class="block mb-1 font-semibold text-sm">Monthly Target Users</label>
+                <input type="number" id="memberTargetUsers" placeholder="500" value="500" class="w-full border rounded px-3 py-2 text-sm">
+              </div>
+            </div>
+
+            <!-- Dynamic ID Display -->
+            <div id="memberIdDisplay" class="text-center p-2 bg-gray-100 rounded">
+              <span class="font-semibold text-sm">Member ID: </span>
+              <span id="memberIdPreview" class="font-bold text-blue-600">---</span>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" id="submitButton" class="w-full py-2 rounded-lg text-white font-bold text-sm transition-colors">
+              Register Member
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- Agent Income Report Section -->
+<section class="py-8 px-4 bg-gradient-to-br from-blue-50 to-purple-50">
+  <div class="container mx-auto max-w-6xl">
+    <h2 class="text-3xl font-bold text-center text-blue-800 mb-8">📊 Agent Income Report</h2>
+    
+    <div class="bg-white p-6 rounded-lg shadow-lg border">
+      <h3 class="text-lg font-semibold text-gray-800 mb-4">💰 Agent Referral Income & Statistics</h3>
+      
+      <div class="overflow-x-auto">
+        <table class="min-w-full bg-white rounded shadow text-xs">
+          <thead class="bg-blue-200">
+            <tr>
+              <th class="p-2 text-left w-24">Agent ID</th>
+              <th class="p-2 text-left w-48">Agent Name</th>
+              <th class="p-2 text-left w-32">WiFi Sharers</th>
+              <th class="p-2 text-left w-32">Antenna Sponsors</th>
+              <th class="p-2 text-left w-32">Total Referrals</th>
+              <th class="p-2 text-left w-36">Commission Earned</th>
+            </tr>
+          </thead>
+          <tbody id="agentIncomeList"></tbody>
+        </table>
+      </div>
+      
+      <div class="mt-4 p-4 bg-gray-50 rounded">
+        <h4 class="font-bold mb-2 text-sm">📋 Agent Performance Summary</h4>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+          <div class="bg-white p-3 rounded shadow">
+            <h5 class="font-semibold text-blue-600">Total Agents</h5>
+            <p class="text-xl font-bold" id="totalAgentsCount">0</p>
+          </div>
+          <div class="bg-white p-3 rounded shadow">
+            <h5 class="font-semibold text-green-600">Total Referrals</h5>
+            <p class="text-xl font-bold" id="totalReferralsCount">0</p>
+          </div>
+          <div class="bg-white p-3 rounded shadow">
+            <h5 class="font-semibold text-purple-600">Total Commission</h5>
+            <p class="text-xl font-bold" id="totalCommissionAmount">₱0</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Comprehensive Financial Report Section -->
+<section class="py-8 px-4 bg-gradient-to-br from-green-50 to-blue-50">
+  <div class="container mx-auto max-w-7xl">
+    <h2 class="text-3xl font-bold text-center text-green-800 mb-8">📋 Comprehensive Financial Report</h2>
+    
+    <!-- Admin Login Section for Comprehensive Reports -->
+    <div id="comprehensiveAdminLoginSection" class="bg-white p-6 rounded-lg shadow-lg border mb-6">
+      <div class="text-center">
+        <h4 class="text-lg font-semibold text-gray-700 mb-4">🔐 Admin Access Required</h4>
+        <p class="text-sm text-gray-600 mb-4">Enter admin password to access comprehensive financial reports</p>
+        <div class="flex flex-col items-center gap-3">
+          <input type="password" id="comprehensiveAdminPassword" placeholder="Enter admin password" class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-center">
+          <button onclick="checkComprehensiveAdminPassword()" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 font-semibold">
+            🔓 Login
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Export/Import Controls (Hidden by default) -->
+    <div id="comprehensiveControlsSection" class="bg-white p-4 rounded-lg shadow-lg border mb-6" style="display: none;">
+      <div class="text-center">
+        <h4 class="text-sm font-semibold text-green-600 mb-2">✅ Admin Access Granted</h4>
+        <button onclick="logoutComprehensiveAdmin()" class="text-xs text-red-600 hover:underline mb-4">🚪 Logout</button>
+      </div>
+      
+      <div class="flex flex-wrap gap-4 justify-center">
+        <button onclick="exportComprehensiveReport()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 text-sm font-semibold">
+          📊 Export Complete Report
+        </button>
+        <button onclick="importComprehensiveReport()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm font-semibold">
+          📥 Import Updated Data
+        </button>
+        <input type="file" id="comprehensiveReportFile" accept=".xlsx,.xls" style="display: none;" onchange="handleComprehensiveImport(event)">
+      </div>
+    </div>
+
+    <!-- Report Tabs Navigation -->
+    <div id="reportTabsSection" class="bg-white rounded-lg shadow-lg border mb-6" style="display: none;">
+      <div class="border-b border-gray-200">
+        <nav class="flex space-x-8 px-6" aria-label="Tabs">
+          <button onclick="showReportTab('wifi-sharers')" id="tab-wifi-sharers" class="report-tab active border-b-2 border-green-500 py-4 px-1 text-sm font-medium text-green-600">
+            📶 WiFi Sharers Report
+          </button>
+          <button onclick="showReportTab('antenna-sponsors')" id="tab-antenna-sponsors" class="report-tab border-b-2 border-transparent py-4 px-1 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
+            📡 Antenna Sponsors Report
+          </button>
+          <button onclick="showReportTab('agent-commission')" id="tab-agent-commission" class="report-tab border-b-2 border-transparent py-4 px-1 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
+            👥 Agent Commission Details
+          </button>
+          <button onclick="showReportTab('all-transactions')" id="tab-all-transactions" class="report-tab border-b-2 border-transparent py-4 px-1 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
+            📋 All Transactions
+          </button>
+        </nav>
+      </div>
+    </div>
+    
+    <!-- Report Content Sections -->
+    <div id="reportContentSection" style="display: none;">
+      
+      <!-- WiFi Sharers Report -->
+      <div id="wifi-sharers-content" class="report-content bg-white p-6 rounded-lg shadow-lg border mb-6">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">📶 WiFi Sharers Financial Report</h3>
+      
+      <div class="overflow-x-auto">
+        <table class="min-w-full bg-white rounded shadow text-xs">
+          <thead class="bg-green-200">
+            <tr>
+              <th class="p-2 text-left">WiFi Sharer ID</th>
+              <th class="p-2 text-left">Name</th>
+              <th class="p-2 text-left">Agent ID</th>
+              <th class="p-2 text-left">Agent Name</th>
+              <th class="p-2 text-left">Barangay</th>
+              <th class="p-2 text-left">Target Users</th>
+              <th class="p-2 text-left">Total Sales</th>
+              <th class="p-2 text-left">Agent Commission (5%)</th>
+              <th class="p-2 text-left">WiFi Personal (40%)</th>
+              <th class="p-2 text-left">Registration Date</th>
+            </tr>
+          </thead>
+          <tbody id="wifiSharerReportList"></tbody>
+        </table>
+      </div>
+      </div>
+      
+      <!-- Antenna Sponsors Report -->
+      <div id="antenna-sponsors-content" class="report-content bg-white p-6 rounded-lg shadow-lg border mb-6" style="display: none;">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">📡 Antenna Sponsors Financial Report</h3>
+      
+      <div class="overflow-x-auto">
+        <table class="min-w-full bg-white rounded shadow text-xs">
+          <thead class="bg-purple-200">
+            <tr>
+              <th class="p-2 text-left">Antenna Sponsor ID</th>
+              <th class="p-2 text-left">Name</th>
+              <th class="p-2 text-left">Agent ID</th>
+              <th class="p-2 text-left">Agent Name</th>
+              <th class="p-2 text-left">Investment Amount</th>
+              <th class="p-2 text-left">Share Count</th>
+              <th class="p-2 text-left">Value per Share</th>
+              <th class="p-2 text-left">Current Share Value</th>
+              <th class="p-2 text-left">Registration Date</th>
+            </tr>
+          </thead>
+          <tbody id="antennaSponsorReportList"></tbody>
+        </table>
+      </div>
+      </div>
+      
+      <!-- Agent Detailed Commission Report -->
+      <div id="agent-commission-content" class="report-content bg-white p-6 rounded-lg shadow-lg border mb-6" style="display: none;">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">👥 Agent Detailed Commission Report</h3>
+      
+      <div class="overflow-x-auto">
+        <table class="min-w-full bg-white rounded shadow text-xs">
+          <thead class="bg-blue-200">
+            <tr>
+              <th class="p-2 text-left">Agent ID</th>
+              <th class="p-2 text-left">Agent Name</th>
+              <th class="p-2 text-left">WiFi Sharer</th>
+              <th class="p-2 text-left">Sale Date</th>
+              <th class="p-2 text-left">Sale Amount</th>
+              <th class="p-2 text-left">Commission (5%)</th>
+              <th class="p-2 text-left">Commission Status</th>
+            </tr>
+          </thead>
+          <tbody id="agentDetailedCommissionList"></tbody>
+        </table>
+      </div>
+      
+      <div class="mt-4 p-4 bg-gray-50 rounded">
+        <h4 class="font-bold mb-2 text-sm">💰 Agent Commission Summary</h4>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
+          <div class="bg-white p-3 rounded shadow">
+            <h5 class="font-semibold text-blue-600">Total Sales</h5>
+            <p class="text-xl font-bold" id="agentTotalSales">₱0</p>
+          </div>
+          <div class="bg-white p-3 rounded shadow">
+            <h5 class="font-semibold text-green-600">Total Commission</h5>
+            <p class="text-xl font-bold" id="agentTotalCommission">₱0</p>
+          </div>
+          <div class="bg-white p-3 rounded shadow">
+            <h5 class="font-semibold text-purple-600">Active Agents</h5>
+            <p class="text-xl font-bold" id="activeAgentsCount">0</p>
+          </div>
+          <div class="bg-white p-3 rounded shadow">
+            <h5 class="font-semibold text-orange-600">Avg Commission/Agent</h5>
+            <p class="text-xl font-bold" id="avgCommissionPerAgent">₱0</p>
+          </div>
+        </div>
+        </div>
+      </div>
+      
+      <!-- All Transactions Report -->
+      <div id="all-transactions-content" class="report-content bg-white p-6 rounded-lg shadow-lg border mb-6" style="display: none;">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">📋 All Transactions Report</h3>
+        
+        <div class="overflow-x-auto">
+          <table class="min-w-full bg-white rounded shadow text-xs">
+            <thead class="bg-yellow-200">
+              <tr>
+                <th class="p-2 text-left">Date</th>
+                <th class="p-2 text-left">Type</th>
+                <th class="p-2 text-left">ID</th>
+                <th class="p-2 text-left">Name</th>
+                <th class="p-2 text-left">Agent ID</th>
+                <th class="p-2 text-left">Agent Name</th>
+                <th class="p-2 text-left">Amount</th>
+                <th class="p-2 text-left">Commission</th>
+                <th class="p-2 text-left">Personal Share</th>
+                <th class="p-2 text-left">Community Pool</th>
+              </tr>
+            </thead>
+            <tbody id="allTransactionsList"></tbody>
+          </table>
+        </div>
+        
+        <!-- Transaction Summary -->
+        <div class="mt-4 p-4 bg-gray-50 rounded">
+          <h4 class="font-bold mb-2 text-sm">📊 Transaction Summary</h4>
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
+            <div class="bg-white p-3 rounded shadow">
+              <h5 class="font-semibold text-blue-600">Total Sales</h5>
+              <p class="text-xl font-bold" id="summaryTotalSales">₱0</p>
+            </div>
+            <div class="bg-white p-3 rounded shadow">
+              <h5 class="font-semibold text-green-600">Total E-wallet</h5>
+              <p class="text-xl font-bold" id="summaryTotalEwallet">₱0</p>
+            </div>
+            <div class="bg-white p-3 rounded shadow">
+              <h5 class="font-semibold text-red-600">Total Commission</h5>
+              <p class="text-xl font-bold" id="summaryTotalCommission">₱0</p>
+            </div>
+            <div class="bg-white p-3 rounded shadow">
+              <h5 class="font-semibold text-purple-600">Community Pool</h5>
+              <p class="text-xl font-bold" id="summaryTotalCommunityPool">₱0</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div> <!-- End of reportContentSection -->
+  </div>
+</section>
+
+<!-- Password Modal -->
+<div id="passwordModal" class="modal">
+    <div class="modal-content">
+        <h3 id="modalTitle">🔐 Enter Admin Password</h3>
+        <p id="modalMessage">Enter admin password to continue:</p>
+        <input type="password" id="modalPasswordInput" placeholder="Enter password">
+        <div class="modal-buttons">
+            <button class="modal-btn modal-btn-secondary" onclick="closePasswordModal()">Cancel</button>
+            <button class="modal-btn modal-btn-primary" onclick="submitPassword()">Continue</button>
+        </div>
+    </div>
+</div>
+
+<!-- Confirmation Modal -->
+<div id="confirmModal" class="modal">
+    <div class="modal-content">
+        <h3 id="confirmTitle">⚠️ Confirm Action</h3>
+        <p id="confirmMessage">Are you sure you want to proceed?</p>
+        <input type="text" id="confirmInput" placeholder="Type confirmation text" style="display: none;">
+        <div class="modal-buttons">
+            <button class="modal-btn modal-btn-secondary" onclick="closeConfirmModal()">Cancel</button>
+            <button class="modal-btn modal-btn-danger" onclick="submitConfirmation()">Confirm</button>
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+        
+<script>
+// Financial data arrays only
+let salesData = JSON.parse(localStorage.getItem('salesData')) || [];
+let ewalletData = JSON.parse(localStorage.getItem('ewalletData')) || [];
+
+// Member registration data
+let agentData = JSON.parse(localStorage.getItem('agentData')) || [];
+let wifiSharerData = JSON.parse(localStorage.getItem('wifiSharerData')) || [];
+let antennaSponsorData = JSON.parse(localStorage.getItem('antennaSponsorData')) || [];
+
+// Show registration form based on selected type
+function showRegistrationForm() {
+    const registrationType = document.getElementById('registrationType').value;
+    const formContainer = document.getElementById('unifiedFormContainer');
+    const agentField = document.getElementById('agentSelectionField');
+    const wifiFields = document.getElementById('wifiSpecificFields');
+    const submitButton = document.getElementById('submitButton');
+    const memberIdPreview = document.getElementById('memberIdPreview');
+    
+    if (registrationType) {
+        formContainer.style.display = 'block';
+        
+        // Reset fields
+        agentField.style.display = 'none';
+        wifiFields.style.display = 'none';
+        
+        // Configure form based on type
+        switch(registrationType) {
+            case 'agent':
+                submitButton.textContent = '👥 Register Agent';
+                submitButton.className = 'w-full py-2 rounded-lg text-white font-bold text-sm transition-colors bg-blue-600 hover:bg-blue-700';
+                memberIdPreview.textContent = 'AGT' + String(agentData.length + 1).padStart(3, '0');
+                break;
+            case 'wifi':
+                agentField.style.display = 'block';
+                wifiFields.style.display = 'block';
+                submitButton.textContent = '📶 Register WiFi Sharer';
+                submitButton.className = 'w-full py-2 rounded-lg text-white font-bold text-sm transition-colors bg-green-600 hover:bg-green-700';
+                memberIdPreview.textContent = 'WFS' + String(wifiSharerData.length + 1).padStart(3, '0');
+                populateAgentDropdown();
+                break;
+            case 'antenna':
+                agentField.style.display = 'block';
+                submitButton.textContent = '📡 Register Antenna Sponsor';
+                submitButton.className = 'w-full py-2 rounded-lg text-white font-bold text-sm transition-colors bg-purple-600 hover:bg-purple-700';
+                memberIdPreview.textContent = 'ANT' + String(antennaSponsorData.length + 1).padStart(3, '0');
+                populateAgentDropdown();
+                break;
+        }
+    } else {
+        formContainer.style.display = 'none';
+    }
+}
+
+// Populate agent dropdown
+function populateAgentDropdown() {
+    const agentSelect = document.getElementById('memberAgent');
+    agentSelect.innerHTML = '<option value="">-- Select Agent --</option>';
+    
+    agentData.forEach(agent => {
+        const option = document.createElement('option');
+        option.value = agent.id;
+        option.textContent = `${agent.id} - ${agent.name}`;
+        agentSelect.appendChild(option);
+    });
+}
+
+// Admin password for data operations
+const ADMIN_PASSWORD = 'admin123';
+
+// Modal dialog variables
+let currentAction = null;
+let passwordCallback = null;
+let confirmCallback = null;
+
+// Modal dialog functions
+function showPasswordModal(title, message, callback) {
+    console.log('showPasswordModal called with:', title, message);
+    const modal = document.getElementById('passwordModal');
+    const titleEl = document.getElementById('modalTitle');
+    const messageEl = document.getElementById('modalMessage');
+    const inputEl = document.getElementById('modalPasswordInput');
+    
+    console.log('Modal elements found:', {modal, titleEl, messageEl, inputEl});
+    
+    if (titleEl) titleEl.textContent = title;
+    if (messageEl) messageEl.textContent = message;
+    if (inputEl) inputEl.value = '';
+    if (modal) modal.style.display = 'block';
+    
+    passwordCallback = callback;
+    
+    // Focus on input and allow Enter key
+    const input = document.getElementById('modalPasswordInput');
+    setTimeout(() => input.focus(), 100);
+    input.onkeypress = function(e) {
+        if (e.key === 'Enter') submitPassword();
+    };
+}
+
+function closePasswordModal() {
+    document.getElementById('passwordModal').style.display = 'none';
+    passwordCallback = null;
+}
+
+function submitPassword() {
+    const password = document.getElementById('modalPasswordInput').value;
+    console.log('submitPassword called with:', password);
+    console.log('passwordCallback exists:', !!passwordCallback);
+    closePasswordModal();
+    if (passwordCallback) {
+        console.log('Executing passwordCallback...');
+        passwordCallback(password);
+    }
+}
+
+function showConfirmModal(title, message, callback, requireText = null) {
+    document.getElementById('confirmTitle').textContent = title;
+    document.getElementById('confirmMessage').textContent = message;
+    const input = document.getElementById('confirmInput');
+    
+    if (requireText) {
+        input.style.display = 'block';
+        input.placeholder = `Type "${requireText}" to confirm`;
+        input.value = '';
+        input.setAttribute('data-required', requireText);
+    } else {
+        input.style.display = 'none';
+    }
+    
+    document.getElementById('confirmModal').style.display = 'block';
+    confirmCallback = callback;
+    
+    if (requireText) {
+        setTimeout(() => input.focus(), 100);
+        input.onkeypress = function(e) {
+            if (e.key === 'Enter') submitConfirmation();
+        };
+    }
+}
+
+function closeConfirmModal() {
+    document.getElementById('confirmModal').style.display = 'none';
+    confirmCallback = null;
+}
+
+function submitConfirmation() {
+    const input = document.getElementById('confirmInput');
+    const required = input.getAttribute('data-required');
+    
+    if (required && input.value !== required) {
+        alert(`Please type "${required}" exactly to confirm.`);
+        return;
+    }
+    
+    closeConfirmModal();
+    if (confirmCallback) confirmCallback(true);
+}
+
+// COMPLETE Export function with Excel formulas - includes ALL data types
+function exportAllDataWithPassword() {
+    try {
+        console.log('Starting complete export with formulas...');
+        
+        // Get all data from localStorage
+        const salesData = JSON.parse(localStorage.getItem('salesData')) || [];
+        const ewalletData = JSON.parse(localStorage.getItem('ewalletData')) || [];
+        const agentData = JSON.parse(localStorage.getItem('agentData')) || [];
+        const wifiSharerData = JSON.parse(localStorage.getItem('wifiSharerData')) || [];
+        const antennaSponsorData = JSON.parse(localStorage.getItem('antennaSponsorData')) || [];
+        
+        console.log('All data loaded:', { salesData, ewalletData, agentData, wifiSharerData, antennaSponsorData });
+        
+        const workbook = XLSX.utils.book_new();
+        
+        // Create sheets for all data types
+        const salesWS = XLSX.utils.json_to_sheet(salesData.length > 0 ? salesData : [{'No Data': 'No sales data available'}]);
+        XLSX.utils.book_append_sheet(workbook, salesWS, 'Sales Data');
+        
+        const ewalletWS = XLSX.utils.json_to_sheet(ewalletData.length > 0 ? ewalletData : [{'No Data': 'No e-wallet data available'}]);
+        XLSX.utils.book_append_sheet(workbook, ewalletWS, 'E-wallet Data');
+        
+        // Add Agent Registration data
+        const agentWS = XLSX.utils.json_to_sheet(agentData.length > 0 ? agentData : [{'No Data': 'No agent data available'}]);
+        XLSX.utils.book_append_sheet(workbook, agentWS, 'Agent Registration');
+        
+        // Add WiFi Sharer data
+        const wifiWS = XLSX.utils.json_to_sheet(wifiSharerData.length > 0 ? wifiSharerData : [{'No Data': 'No wifi sharer data available'}]);
+        XLSX.utils.book_append_sheet(workbook, wifiWS, 'WiFi Sharers');
+        
+        // Add Antenna Sponsor data
+        const antennaWS = XLSX.utils.json_to_sheet(antennaSponsorData.length > 0 ? antennaSponsorData : [{'No Data': 'No antenna sponsor data available'}]);
+        XLSX.utils.book_append_sheet(workbook, antennaWS, 'Antenna Sponsors');
+        
+        // Create Financial Summary sheet with Excel formulas
+        const summaryData = [
+            ['UHP BAYANIHAN ECOSYSTEM - FINANCIAL SUMMARY', '', '', ''],
+            ['', '', '', ''],
+            ['FINANCIAL OVERVIEW', '', '', ''],
+            ['Total Sales', '=SUM(\'Sales Data\'.C:C)', '', 'Sum of all sales amounts'],
+            ['Total E-wallet Income', '=SUM(\'E-wallet Data\'.C:C)', '', 'Sum of all e-wallet amounts'],
+            ['', '', '', ''],
+            ['REVENUE DISTRIBUTION', '', '', ''],
+            ['WiFi Personal (40%)', '=B4*0.4', '', '40% of total sales'],
+            ['Community Pool - Voucher (50%)', '=B4*0.5', '', '50% of total sales'],
+            ['Community Pool - E-wallet (70%)', '=B5*0.7', '', '70% of e-wallet income'],
+            ['Total Community Pool', '=B9+B10', '', 'Combined community pool'],
+            ['', '', '', ''],
+            ['EXPENSES & COMMISSIONS', '', '', ''],
+            ['Agent Commission (5%)', '=B4*0.05', '', '5% of total sales'],
+            ['Operational Expenses (5%)', '=B4*0.05', '', '5% of total sales'],
+            ['', '', '', ''],
+            ['SHARE CALCULATIONS', '', '', ''],
+            ['Total WiFi Sharers', '=COUNTA(\'WiFi Sharers\'.A:A)-1', '', 'Count of WiFi sharers'],
+            ['Total Antenna Sponsors', '=COUNTA(\'Antenna Sponsors\'.A:A)-1', '', 'Count of antenna sponsors'],
+            ['Total Shares', '=B18+B19', '', 'Combined total shares'],
+            ['Value per Share', '=IF(B20>0,B11/B20,0)', '', 'Community pool ÷ total shares'],
+            ['', '', '', ''],
+            ['SUMMARY TOTALS', '', '', ''],
+            ['Total Revenue', '=B4+B5', '', 'Sales + E-wallet'],
+            ['Total Expenses', '=B14+B15', '', 'Commission + Operational'],
+            ['Net Community Pool', '=B11', '', 'Available for distribution'],
+            ['Per Share Distribution', '=B21', '', 'Amount per share']
+        ];
+        
+        const summaryWS = XLSX.utils.aoa_to_sheet(summaryData);
+        
+        // Set column widths for better readability
+        summaryWS['!cols'] = [
+            { width: 30 }, // Column A - Description
+            { width: 20 }, // Column B - Values/Formulas
+            { width: 15 }, // Column C - Empty
+            { width: 40 }  // Column D - Notes
+        ];
+        
+        // Add the Financial Summary sheet first
+        XLSX.utils.book_append_sheet(workbook, summaryWS, 'Financial Summary');
+        
+        XLSX.writeFile(workbook, 'UHP_Complete_Data_with_Formulas.xlsx');
+        alert('✅ Complete export with Excel formulas successful!\n\nFile: UHP_Complete_Data_with_Formulas.xlsx\n\nFeatures:\n• All data sheets included\n• Financial Summary with live formulas\n• Automatic calculations\n• Real-time updates when data changes');
+    } catch (error) {
+        console.error('Export error:', error);
+        alert('❌ Export failed: ' + error.message);
+    }
+}
+
+// SIMPLE Import function - no password needed for testing
+function importExcelWithPasswordPrompt() {
+    console.log('Import function called');
+    document.getElementById('excelFileInput').click();
+}
+
+// SIMPLE Clear function - no password needed for testing
+function clearAllDataWithPassword() {
+    if (confirm('Are you sure you want to clear ALL data? This includes WiFi Sharers, Antenna Sponsors, Sales, E-wallet, and Agent data. This cannot be undone.')) {
+        try {
+            // Clear ALL data arrays in memory FIRST
+            salesData = [];
+            ewalletData = [];
+            wifiSharerData = [];
+            antennaSponsorData = [];
+            agentData = [];
+            
+            // Clear ALL localStorage data
+            localStorage.removeItem('salesData');
+            localStorage.removeItem('ewalletData');
+            localStorage.removeItem('wifiSharerData');
+            localStorage.removeItem('antennaSponsorData');
+            localStorage.removeItem('agentData');
+            
+            // Force update financial cards with cleared data
+            updateFinancialCards();
+            
+            // Also update other displays
+            updateSalesDisplay();
+            updateEwalletDisplay();
+            
+            // Double-check: Explicitly reset totalShares to 0 if still not 0
+            const totalSharesElement = document.getElementById('totalShares');
+            if (totalSharesElement && totalSharesElement.textContent !== '0') {
+                totalSharesElement.textContent = '0';
+            }
+            
+            alert('ALL data cleared successfully! Total Shares reset to 0.');
+        } catch (error) {
+            console.error('Clear error:', error);
+            alert('Clear failed: ' + error.message);
+        }
+    }
+}
+
+// COMPLETE Import Excel data handler with all data types
+document.getElementById('excelFileInput').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, {type: 'array'});
+            
+            let importedSheets = [];
+            
+            // Import Sales Data with validation
+            if (workbook.SheetNames.includes('Sales Data')) {
+                const salesSheet = workbook.Sheets['Sales Data'];
+                const newSalesData = XLSX.utils.sheet_to_json(salesSheet);
+                
+                // Validate and clean sales data
+                const validSalesData = newSalesData.filter(row => {
+                    return row.date && row.type && (row.amount || row.amount === 0);
+                }).map(row => ({
+                    date: row.date,
+                    type: row.type,
+                    amount: parseFloat(row.amount) || 0,
+                    description: row.description || ''
+                }));
+                
+                salesData = validSalesData;
+                localStorage.setItem('salesData', JSON.stringify(salesData));
+                importedSheets.push('Sales Data');
+            }
+            
+            // Import E-wallet Data with validation
+            if (workbook.SheetNames.includes('E-wallet Data')) {
+                const ewalletSheet = workbook.Sheets['E-wallet Data'];
+                const newEwalletData = XLSX.utils.sheet_to_json(ewalletSheet);
+                
+                // Validate and clean e-wallet data
+                const validEwalletData = newEwalletData.filter(row => {
+                    return row.date && (row.amount || row.amount === 0);
+                }).map(row => ({
+                    date: row.date,
+                    type: 'E-wallet',
+                    amount: parseFloat(row.amount) || 0,
+                    description: row.description || 'Gcash'
+                }));
+                
+                ewalletData = validEwalletData;
+                localStorage.setItem('ewalletData', JSON.stringify(ewalletData));
+                importedSheets.push('E-wallet Data');
+            }
+            
+            // Import Agent Registration Data with update capability
+            if (workbook.SheetNames.includes('Agent Registration')) {
+                const agentSheet = workbook.Sheets['Agent Registration'];
+                const newAgentData = XLSX.utils.sheet_to_json(agentSheet);
+                
+                // Get current agent data
+                let currentAgentData = JSON.parse(localStorage.getItem('agentData')) || [];
+                
+                // Process imported agent data
+                newAgentData.forEach(importedAgent => {
+                    if (importedAgent.id && importedAgent.name) {
+                        const existingIndex = currentAgentData.findIndex(a => a.id === importedAgent.id);
+                        
+                        const agentRecord = {
+                            id: importedAgent.id,
+                            name: importedAgent.name,
+                            barangay: importedAgent.barangay || '',
+                            contactNumber: importedAgent.contactNumber || '',
+                            dateRegistered: importedAgent.dateRegistered || new Date().toISOString().split('T')[0]
+                        };
+                        
+                        if (existingIndex !== -1) {
+                            // Update existing agent
+                            currentAgentData[existingIndex] = agentRecord;
+                        } else {
+                            // Add new agent
+                            currentAgentData.push(agentRecord);
+                        }
+                    }
+                });
+                
+                localStorage.setItem('agentData', JSON.stringify(currentAgentData));
+                importedSheets.push('Agent Registration');
+            }
+            
+            // Import WiFi Sharers Data with update capability
+            if (workbook.SheetNames.includes('WiFi Sharers')) {
+                const wifiSheet = workbook.Sheets['WiFi Sharers'];
+                const newWifiData = XLSX.utils.sheet_to_json(wifiSheet);
+                
+                // Get current WiFi sharer data
+                let currentWifiData = JSON.parse(localStorage.getItem('wifiSharerData')) || [];
+                
+                // Process imported WiFi data
+                newWifiData.forEach(importedWifi => {
+                    if (importedWifi.id && importedWifi.name) {
+                        const existingIndex = currentWifiData.findIndex(w => w.id === importedWifi.id);
+                        
+                        const wifiRecord = {
+                            id: importedWifi.id,
+                            name: importedWifi.name,
+                            agent: importedWifi.agent || '',
+                            barangay: importedWifi.barangay || '',
+                            targetUsers: parseInt(importedWifi.targetUsers) || 0,
+                            dateRegistered: importedWifi.dateRegistered || new Date().toISOString().split('T')[0]
+                        };
+                        
+                        if (existingIndex !== -1) {
+                            // Update existing WiFi sharer
+                            currentWifiData[existingIndex] = wifiRecord;
+                        } else {
+                            // Add new WiFi sharer
+                            currentWifiData.push(wifiRecord);
+                        }
+                    }
+                });
+                
+                localStorage.setItem('wifiSharerData', JSON.stringify(currentWifiData));
+                importedSheets.push('WiFi Sharers');
+            }
+            
+            // Import Antenna Sponsors Data with update capability
+            if (workbook.SheetNames.includes('Antenna Sponsors')) {
+                const antennaSheet = workbook.Sheets['Antenna Sponsors'];
+                const newAntennaData = XLSX.utils.sheet_to_json(antennaSheet);
+                
+                // Get current antenna sponsor data
+                let currentAntennaData = JSON.parse(localStorage.getItem('antennaSponsorData')) || [];
+                
+                // Process imported antenna data
+                newAntennaData.forEach(importedAntenna => {
+                    if (importedAntenna.id && importedAntenna.name) {
+                        const existingIndex = currentAntennaData.findIndex(a => a.id === importedAntenna.id);
+                        
+                        const antennaRecord = {
+                            id: importedAntenna.id,
+                            name: importedAntenna.name,
+                            agent: importedAntenna.agent || '',
+                            investmentAmount: parseFloat(importedAntenna.investmentAmount) || 0,
+                            shareCount: parseInt(importedAntenna.shareCount) || 0,
+                            dateRegistered: importedAntenna.dateRegistered || new Date().toISOString().split('T')[0]
+                        };
+                        
+                        if (existingIndex !== -1) {
+                            // Update existing antenna sponsor
+                            currentAntennaData[existingIndex] = antennaRecord;
+                        } else {
+                            // Add new antenna sponsor
+                            currentAntennaData.push(antennaRecord);
+                        }
+                    }
+                });
+                
+                localStorage.setItem('antennaSponsorData', JSON.stringify(currentAntennaData));
+                importedSheets.push('Antenna Sponsors');
+            }
+            
+            if (importedSheets.length > 0) {
+                updateAllDisplays();
+                
+                // Count records for summary
+                const salesCount = salesData ? salesData.length : 0;
+                const ewalletCount = ewalletData ? ewalletData.length : 0;
+                const agentCount = JSON.parse(localStorage.getItem('agentData') || '[]').length;
+                const wifiCount = JSON.parse(localStorage.getItem('wifiSharerData') || '[]').length;
+                const antennaCount = JSON.parse(localStorage.getItem('antennaSponsorData') || '[]').length;
+                
+                alert(`✅ Complete data import successful!\n\nImported sheets: ${importedSheets.join(', ')}\n\nRecord counts:\n• Sales: ${salesCount}\n• E-wallet: ${ewalletCount}\n• Agents: ${agentCount}\n• WiFi Sharers: ${wifiCount}\n• Antenna Sponsors: ${antennaCount}`);
+            } else {
+                alert('No valid data sheets found. Please ensure your Excel file contains at least one of these sheets:\n• Sales Data\n• E-wallet Data\n• Agent Registration\n• WiFi Sharers\n• Antenna Sponsors');
+            }
+        } catch (error) {
+            console.error('Import error:', error);
+            alert('Error importing data. Please check your Excel file format.');
+        }
+    };
+    reader.readAsArrayBuffer(file);
+});
+
+// Functions to update display after import
+function updateSalesDisplay() {
+    const salesList = document.getElementById('salesList');
+    salesList.innerHTML = '';
+    
+    // Get both sales data and e-wallet data for comprehensive overview
+    const salesData = JSON.parse(localStorage.getItem('salesData')) || [];
+    const ewalletData = JSON.parse(localStorage.getItem('ewalletData')) || [];
+    
+    let totalSales = 0;
+    let voucherSales = 0;
+    let ewalletSales = 0;
+    
+    // Process voucher sales
+    salesData.forEach(sale => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td class="border px-2 py-1">${sale.date || 'N/A'}</td>
+            <td class="border px-2 py-1">${sale.type || 'Voucher'}</td>
+            <td class="border px-2 py-1">₱${(sale.amount || 0).toLocaleString()}</td>
+            <td class="border px-2 py-1">${sale.description || 'Voucher sales'}</td>
+        `;
+        salesList.appendChild(row);
+        
+        const amount = parseFloat(sale.amount) || 0;
+        totalSales += amount;
+        voucherSales += amount;
+    });
+    
+    // Process e-wallet income
+    ewalletData.forEach(ewallet => {
+        const amount = parseFloat(ewallet.amount) || 0;
+        totalSales += amount;
+        ewalletSales += amount;
+    });
+    
+    // Update chart values
+    document.getElementById('chartVoucherSales').textContent = `₱${voucherSales.toLocaleString()}`;
+    document.getElementById('chartEwalletSales').textContent = `₱${ewalletSales.toLocaleString()}`;
+    document.getElementById('chartTotalSales').textContent = `₱${totalSales.toLocaleString()}`;
+    
+    // Update financial cards to reflect changes
+    updateFinancialCards();
+}
+
+function updateEwalletDisplay() {
+    const ewalletList = document.getElementById('ewalletList');
+    const ewalletData = JSON.parse(localStorage.getItem('ewalletData')) || [];
+    ewalletList.innerHTML = '';
+    
+    ewalletData.forEach(ewallet => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td class="p-1 border">${ewallet.date || 'N/A'}</td>
+            <td class="p-1 border">₱${(ewallet.amount || 0).toLocaleString()}</td>
+            <td class="p-1 border">${ewallet.description || 'N/A'}</td>
+        `;
+        ewalletList.appendChild(row);
+    });
+}
+
+function updateAllDisplays() {
+    updateSalesDisplay();
+    updateEwalletDisplay();
+    updateFinancialCards();
+}
+
+
+
+// Handle form submission
+document.getElementById('unifiedForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const registrationType = document.getElementById('registrationType').value;
+    const memberData = {
+        name: document.getElementById('memberName').value,
+        phone: document.getElementById('memberPhone').value,
+        address: document.getElementById('memberAddress').value,
+        registrationDate: new Date().toLocaleDateString()
+    };
+    
+    switch(registrationType) {
+        case 'agent':
+            memberData.id = 'AGT' + String(agentData.length + 1).padStart(3, '0');
+            agentData.push(memberData);
+            localStorage.setItem('agentData', JSON.stringify(agentData));
+            break;
+        case 'wifi':
+            memberData.id = 'WFS' + String(wifiSharerData.length + 1).padStart(3, '0');
+            memberData.agent = document.getElementById('memberAgent').value;
+            memberData.barangay = document.getElementById('memberBarangay').value;
+            memberData.targetUsers = document.getElementById('memberTargetUsers').value;
+            wifiSharerData.push(memberData);
+            localStorage.setItem('wifiSharerData', JSON.stringify(wifiSharerData));
+            break;
+        case 'antenna':
+            memberData.id = 'ANT' + String(antennaSponsorData.length + 1).padStart(3, '0');
+            memberData.agent = document.getElementById('memberAgent').value;
+            antennaSponsorData.push(memberData);
+            localStorage.setItem('antennaSponsorData', JSON.stringify(antennaSponsorData));
+            break;
+    }
+    
+    alert(`✅ Successfully registered ${memberData.name} with ID: ${memberData.id}`);
+    
+    // Update financial cards and dropdowns
+    updateFinancialCards();
+    updateAgentIncomeReport();
+    populateWifiSharerDropdown();
+    
+    // Reset form
+    document.getElementById('unifiedForm').reset();
+    document.getElementById('registrationType').value = '';
+    document.getElementById('unifiedFormContainer').style.display = 'none';
+    document.getElementById('memberIdPreview').textContent = '---';
+});
+
+// Populate WiFi sharer dropdown for sales input
+function populateWifiSharerDropdown() {
+    const salesPartnerSelect = document.getElementById('salesPartner');
+    if (salesPartnerSelect) {
+        salesPartnerSelect.innerHTML = '<option value="">-- Select WiFi Sharer --</option>';
+        
+        wifiSharerData.forEach(sharer => {
+            const option = document.createElement('option');
+            option.value = sharer.id;
+            option.textContent = `${sharer.id} - ${sharer.name}`;
+            option.dataset.name = sharer.name;
+            option.dataset.agent = sharer.agent || 'N/A';
+            salesPartnerSelect.appendChild(option);
+        });
+    }
+}
+
+// Handle sales form submission with admin password protection
+function checkSalesAdminPassword() {
+    const password = document.getElementById('salesAdminPassword').value;
+    if (password === ADMIN_PASSWORD) {
+        document.getElementById('salesAdminLoginSection').style.display = 'none';
+        document.getElementById('salesFormSection').style.display = 'block';
+        document.getElementById('salesAdminPassword').value = '';
+    } else {
+        alert('Incorrect password. Access denied.');
+        document.getElementById('salesAdminPassword').value = '';
+    }
+}
+
+function logoutSalesAdmin() {
+    document.getElementById('salesAdminLoginSection').style.display = 'block';
+    document.getElementById('salesFormSection').style.display = 'none';
+}
+
+function checkDataAdminPassword() {
+    const password = document.getElementById('dataAdminPassword').value;
+    if (password === ADMIN_PASSWORD) {
+        document.getElementById('dataAdminLoginSection').style.display = 'none';
+        document.getElementById('dataManagementSection').style.display = 'block';
+        document.getElementById('dataAdminPassword').value = '';
+    } else {
+        alert('Incorrect password. Access denied.');
+        document.getElementById('dataAdminPassword').value = '';
+    }
+}
+
+function logoutDataAdmin() {
+    document.getElementById('dataAdminLoginSection').style.display = 'block';
+    document.getElementById('dataManagementSection').style.display = 'none';
+}
+
+function checkComprehensiveAdminPassword() {
+    const password = document.getElementById('comprehensiveAdminPassword').value;
+    if (password === ADMIN_PASSWORD) {
+        document.getElementById('comprehensiveAdminLoginSection').style.display = 'none';
+        document.getElementById('comprehensiveControlsSection').style.display = 'block';
+        document.getElementById('comprehensiveAdminPassword').value = '';
+    } else {
+        alert('Incorrect password. Access denied.');
+        document.getElementById('comprehensiveAdminPassword').value = '';
+    }
+}
+
+function logoutComprehensiveAdmin() {
+    document.getElementById('comprehensiveAdminLoginSection').style.display = 'block';
+    document.getElementById('comprehensiveControlsSection').style.display = 'none';
+}
+
+function handleSalesSubmission(e) {
+    e.preventDefault();
+    
+    const salesPartnerSelect = document.getElementById('salesPartner');
+    const salesAmount = document.getElementById('salesAmount');
+    
+    if (!salesPartnerSelect.value || !salesAmount.value) {
+        alert('Please fill in all fields');
+        return;
+    }
+    
+    const selectedOption = salesPartnerSelect.options[salesPartnerSelect.selectedIndex];
+    const salesData = JSON.parse(localStorage.getItem('salesData')) || [];
+    
+    const newSale = {
+        date: new Date().toLocaleDateString(),
+        type: 'Voucher', // Set type for sales overview chart
+        wifiSharerId: salesPartnerSelect.value,
+        wifiSharerName: selectedOption.dataset.name,
+        agent: selectedOption.dataset.agent,
+        amount: parseFloat(salesAmount.value),
+        description: `Voucher sales by ${selectedOption.dataset.name}`
+    };
+    
+    salesData.push(newSale);
+    localStorage.setItem('salesData', JSON.stringify(salesData));
+    
+    // Update sales list display
+    updateSalesListDisplay();
+    
+    // Update financial cards
+    updateFinancialCards();
+    
+    // Update agent income report
+    updateAgentIncomeReport();
+    
+    // Reset form
+    salesPartnerSelect.value = '';
+    salesAmount.value = '';
+    
+    alert(`✅ Sales recorded: ₱${newSale.amount.toLocaleString()} for ${newSale.wifiSharerName}`);
+}
+
+// Update sales list display
+function updateSalesListDisplay() {
+    const salesList = document.getElementById('salesList');
+    const salesData = JSON.parse(localStorage.getItem('salesData')) || [];
+    
+    salesList.innerHTML = '';
+    
+    salesData.forEach(sale => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td class="p-2 border">${sale.wifiSharerId || 'N/A'}</td>
+            <td class="p-2 border">${sale.wifiSharerName || 'N/A'}</td>
+            <td class="p-2 border">${sale.agent || 'N/A'}</td>
+            <td class="p-2 border">₱${(sale.amount || 0).toLocaleString()}</td>
+        `;
+        salesList.appendChild(row);
+    });
+}
+
+// E-Wallet Functions
+function checkAdminPassword() {
+    const passwordInput = document.getElementById('adminPassword');
+    const enteredPassword = passwordInput.value;
+    
+    if (enteredPassword === ADMIN_PASSWORD) {
+        document.getElementById('adminLoginSection').style.display = 'none';
+        document.getElementById('ewalletFormSection').style.display = 'block';
+        passwordInput.value = '';
+        alert('✅ Admin access granted!');
+    } else {
+        alert('❌ Incorrect admin password!');
+        passwordInput.value = '';
+    }
+}
+
+function logoutAdmin() {
+    document.getElementById('adminLoginSection').style.display = 'block';
+    document.getElementById('ewalletFormSection').style.display = 'none';
+    alert('🚪 Logged out successfully');
+}
+
+function handleEwalletSubmission(e) {
+    e.preventDefault();
+    
+    const ewalletAmount = document.getElementById('ewalletAmount');
+    const ewalletDescription = document.getElementById('ewalletDescription');
+    
+    if (!ewalletAmount.value || !ewalletDescription.value) {
+        alert('Please fill in all fields');
+        return;
+    }
+    
+    const ewalletData = JSON.parse(localStorage.getItem('ewalletData')) || [];
+    
+    const newEwalletEntry = {
+        date: new Date().toLocaleDateString(),
+        type: 'E-wallet', // Set type for sales overview chart
+        amount: parseFloat(ewalletAmount.value),
+        description: ewalletDescription.value
+    };
+    
+    ewalletData.push(newEwalletEntry);
+    localStorage.setItem('ewalletData', JSON.stringify(ewalletData));
+    
+    // Update e-wallet list display
+    updateEwalletListDisplay();
+    
+    // Update financial cards
+    updateFinancialCards();
+    
+    // Reset form
+    ewalletAmount.value = '';
+    ewalletDescription.value = '';
+    
+    alert(`✅ E-wallet income recorded: ₱${newEwalletEntry.amount.toLocaleString()}`);
+}
+
+function updateEwalletListDisplay() {
+    const ewalletList = document.getElementById('ewalletList');
+    const ewalletData = JSON.parse(localStorage.getItem('ewalletData')) || [];
+    
+    ewalletList.innerHTML = '';
+    
+    ewalletData.forEach(entry => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td class="p-1 border">${entry.date}</td>
+            <td class="p-1 border">₱${entry.amount.toLocaleString()}</td>
+            <td class="p-1 border">${entry.description}</td>
+        `;
+        ewalletList.appendChild(row);
+    });
+}
+
+// Update agent income report
+function updateAgentIncomeReport() {
+    const agentData = JSON.parse(localStorage.getItem('agentData')) || [];
+    const wifiSharerData = JSON.parse(localStorage.getItem('wifiSharerData')) || [];
+    const antennaData = JSON.parse(localStorage.getItem('antennaSponsorData')) || [];
+    const salesData = JSON.parse(localStorage.getItem('salesData')) || [];
+    
+    const agentIncomeList = document.getElementById('agentIncomeList');
+    agentIncomeList.innerHTML = '';
+    
+    let totalReferrals = 0;
+    let totalCommission = 0;
+    
+    agentData.forEach(agent => {
+        // Count referrals for this agent
+        const wifiReferrals = wifiSharerData.filter(wifi => wifi.agent === agent.id);
+        const antennaReferrals = antennaData.filter(antenna => antenna.agent === agent.id);
+        const agentTotalReferrals = wifiReferrals.length + antennaReferrals.length;
+        
+        // Calculate commission (5% of sales from their referrals)
+        let agentCommission = 0;
+        salesData.forEach(sale => {
+            const wifiSharer = wifiSharerData.find(wifi => wifi.id === sale.wifiSharerId);
+            if (wifiSharer && wifiSharer.agent === agent.id) {
+                agentCommission += (parseFloat(sale.amount) || 0) * 0.05; // 5% commission
+            }
+        });
+        
+        totalReferrals += agentTotalReferrals;
+        totalCommission += agentCommission;
+        
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td class="border px-2 py-1">${agent.id}</td>
+            <td class="border px-2 py-1">${agent.name}</td>
+            <td class="border px-2 py-1">${wifiReferrals.length}</td>
+            <td class="border px-2 py-1">${antennaReferrals.length}</td>
+            <td class="border px-2 py-1">${agentTotalReferrals}</td>
+            <td class="border px-2 py-1">₱${agentCommission.toLocaleString()}</td>
+        `;
+        agentIncomeList.appendChild(row);
+    });
+    
+    // Update summary
+    document.getElementById('totalAgentsCount').textContent = agentData.length;
+    document.getElementById('totalReferralsCount').textContent = totalReferrals;
+    document.getElementById('totalCommissionAmount').textContent = `₱${totalCommission.toLocaleString()}`;
+}
+
+// Update all financial cards with calculated data
+function updateFinancialCards() {
+    // ALWAYS re-read from localStorage to ensure fresh data on page refresh
+    salesData = JSON.parse(localStorage.getItem('salesData')) || [];
+    ewalletData = JSON.parse(localStorage.getItem('ewalletData')) || [];
+    wifiSharerData = JSON.parse(localStorage.getItem('wifiSharerData')) || [];
+    antennaSponsorData = JSON.parse(localStorage.getItem('antennaSponsorData')) || [];
+    
+    // Debug: Log data to console
+    console.log('Data loaded:', {
+        salesData: salesData.length,
+        ewalletData: ewalletData.length,
+        wifiSharerData: wifiSharerData.length,
+        antennaSponsorData: antennaSponsorData.length
+    });
+    
+    // Debug: Log actual localStorage content
+    console.log('localStorage content:', {
+        salesData: localStorage.getItem('salesData'),
+        ewalletData: localStorage.getItem('ewalletData'),
+        wifiSharerData: localStorage.getItem('wifiSharerData'),
+        antennaSponsorData: localStorage.getItem('antennaSponsorData')
+    });
+    
+    // Calculate total sales from WiFi sales
+    let totalSalesAmount = 0;
+    salesData.forEach(sale => {
+        totalSalesAmount += parseFloat(sale.amount) || 0;
+    });
+    
+    // Calculate total e-wallet income
+    let totalEwalletAmount = 0;
+    ewalletData.forEach(ewallet => {
+        totalEwalletAmount += parseFloat(ewallet.amount) || 0;
+    });
+    
+    // Calculate total revenue (sales + e-wallet)
+    const totalRevenue = totalSalesAmount + totalEwalletAmount;
+    
+    // Calculate distributions based on CORRECT UHP model
+    const wifiPersonalShare = totalRevenue * 0.40; // 40% of TOTAL SALES (voucher + ewallet)
+    const voucherPoolAmount = totalSalesAmount * 0.50; // 50% of voucher sales
+    const ewalletPoolAmount = totalEwalletAmount * 0.70; // 70% of ewallet income
+    const communityPool = voucherPoolAmount + ewalletPoolAmount; // Combined community pool
+    const agentCommission = totalRevenue * 0.05; // 5% of TOTAL SALES (voucher + ewallet)
+    const operationalExpenses = totalRevenue * 0.05; // 5% of TOTAL SALES (voucher + ewallet)
+    const ewalletToWifiSharers = totalEwalletAmount * 0.70; // 70% of e-wallet to WiFi sharers
+    
+    // Calculate total shares (WiFi Sharer count + Antenna Sponsor count)
+    const totalShares = wifiSharerData.length + antennaSponsorData.length;
+    
+    const valuePerShare = totalShares > 0 ? communityPool / totalShares : 0;
+    
+    // Update all financial cards
+    document.getElementById('totalSales').textContent = `₱${totalRevenue.toLocaleString()}`;
+    document.getElementById('totalWiFiPersonal').textContent = `₱${wifiPersonalShare.toLocaleString()}`;
+    document.getElementById('sharedPool').textContent = `₱${communityPool.toLocaleString()}`;
+    document.getElementById('valuePerShare').textContent = `₱${valuePerShare.toLocaleString()}`;
+    document.getElementById('agentsShare').textContent = `₱${agentCommission.toLocaleString()}`;
+    document.getElementById('opexShare').textContent = `₱${operationalExpenses.toLocaleString()}`;
+    document.getElementById('totalShares').textContent = totalShares.toLocaleString();
+    document.getElementById('ewalletIncome').textContent = `₱${totalEwalletAmount.toLocaleString()}`;
+    document.getElementById('ewalletToWifiSharers').textContent = `₱${ewalletToWifiSharers.toLocaleString()}`;
+    
+    // Update individual counts in Total Shares card
+    document.getElementById('wifiSharerCount').textContent = wifiSharerData.length.toLocaleString();
+    document.getElementById('antennaSponsorCount').textContent = antennaSponsorData.length.toLocaleString();
+    
+
+    
+    // Update Community Pool breakdown
+    document.getElementById('voucherPoolAmount').textContent = `₱${voucherPoolAmount.toLocaleString()}`;
+    document.getElementById('ewalletPoolAmount').textContent = `₱${ewalletPoolAmount.toLocaleString()}`;
+    
+    // Update chart total sales as well
+    document.getElementById('chartTotalSales').textContent = `₱${totalRevenue.toLocaleString()}`;
+    
+    // Update current month display
+    const currentDate = new Date();
+    const monthNames = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"];
+    const currentMonthName = monthNames[currentDate.getMonth()];
+    const currentYear = currentDate.getFullYear();
+    document.getElementById('currentMonth').textContent = `${currentMonthName} ${currentYear}`;
+    
+    // Update progress bars with relative percentage calculation
+    // Find the maximum value among all three to ensure proper scaling
+    const maxAmount = Math.max(totalSalesAmount, totalEwalletAmount, totalRevenue, 1);
+    
+    // Calculate percentages relative to the highest value (max 100%)
+    const salesPercentage = Math.min((totalSalesAmount / maxAmount) * 100, 100);
+    const ewalletPercentage = Math.min((totalEwalletAmount / maxAmount) * 100, 100);
+    const totalPercentage = Math.min((totalRevenue / maxAmount) * 100, 100);
+    
+    const voucherBar = document.getElementById('voucherSalesBar');
+    const ewalletBar = document.getElementById('ewalletSalesBar');
+    const totalBar = document.getElementById('totalSalesBar');
+    
+    // Apply height with maximum limit of 100%
+    if (voucherBar) voucherBar.style.height = `${salesPercentage}%`;
+    if (ewalletBar) ewalletBar.style.height = `${ewalletPercentage}%`;
+    if (totalBar) totalBar.style.height = `${totalPercentage}%`;
+}
+
+// Add event listener for registration type dropdown
+document.addEventListener('DOMContentLoaded', function() {
+    const registrationTypeSelect = document.getElementById('registrationType');
+    if (registrationTypeSelect) {
+        registrationTypeSelect.addEventListener('change', showRegistrationForm);
+    }
+    
+    // Add sales form event listener
+    const salesForm = document.getElementById('salesForm');
+    if (salesForm) {
+        salesForm.addEventListener('submit', handleSalesSubmission);
+    }
+    
+    // Add e-wallet form event listener
+    const ewalletForm = document.getElementById('ewalletForm');
+    if (ewalletForm) {
+        ewalletForm.addEventListener('submit', handleEwalletSubmission);
+    }
+    
+    // Populate dropdowns on page load
+    populateWifiSharerDropdown();
+    updateSalesListDisplay();
+    updateEwalletListDisplay();
+    
+    // Update financial cards on page load
+    updateFinancialCards();
+    
+    // Update agent income report on page load
+    updateAgentIncomeReport();
+    
+    // Update comprehensive reports on page load
+    updateComprehensiveReports();
+    
+    // Initialize default tab (WiFi Sharers Report)
+    showReportTab('wifi-sharers');
+});
+
+// Initialize display on page load
+window.addEventListener('load', function() {
+    updateAllDisplays();
+});
+
+// Comprehensive Financial Report Functions
+function updateComprehensiveReports() {
+    updateWifiSharerReport();
+    updateAntennaSponsorReport();
+    updateAgentDetailedCommissionReport();
+    updateAllSalesTransactionsReport();
+}
+
+// Tab switching functionality for reports
+function showReportTab(tabName) {
+    // Hide all report content
+    const reportContents = document.querySelectorAll('.report-content');
+    reportContents.forEach(content => {
+        content.style.display = 'none';
+    });
+    
+    // Remove active class from all tabs
+    const tabButtons = document.querySelectorAll('.report-tab');
+    tabButtons.forEach(button => {
+        button.classList.remove('bg-blue-600', 'text-white');
+        button.classList.add('bg-gray-200', 'text-gray-700');
+    });
+    
+    // Show selected tab content
+    const selectedContent = document.getElementById(tabName + '-content');
+    if (selectedContent) {
+        selectedContent.style.display = 'block';
+    }
+    
+    // Add active class to selected tab
+    const selectedTab = document.querySelector(`[onclick="showReportTab('${tabName}')"]`);
+    if (selectedTab) {
+        selectedTab.classList.remove('bg-gray-200', 'text-gray-700');
+        selectedTab.classList.add('bg-blue-600', 'text-white');
+    }
+    
+    // Update specific report data when tab is shown
+    switch(tabName) {
+        case 'wifi-sharers':
+            updateWifiSharerReport();
+            break;
+        case 'antenna-sponsors':
+            updateAntennaSponsorReport();
+            break;
+        case 'agent-commission':
+            updateAgentDetailedCommissionReport();
+            break;
+        case 'all-transactions':
+            updateAllSalesTransactionsReport();
+            break;
+    }
+}
+
+function updateWifiSharerReport() {
+    const wifiSharerData = JSON.parse(localStorage.getItem('wifiSharerData')) || [];
+    const agentData = JSON.parse(localStorage.getItem('agentData')) || [];
+    const salesData = JSON.parse(localStorage.getItem('salesData')) || [];
+    const reportList = document.getElementById('wifiSharerReportList');
+    
+    reportList.innerHTML = '';
+    
+    wifiSharerData.forEach(wifiSharer => {
+        const agent = agentData.find(a => a.id === wifiSharer.agent) || {};
+        
+        // Calculate total sales for this WiFi Sharer
+        const wifiSharerSales = salesData.filter(sale => sale.wifiSharerId === wifiSharer.id);
+        const totalSales = wifiSharerSales.reduce((sum, sale) => sum + (parseFloat(sale.amount) || 0), 0);
+        const agentCommission = totalSales * 0.05;
+        const wifiPersonal = totalSales * 0.40;
+        
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td class="border px-2 py-1">${wifiSharer.id}</td>
+            <td class="border px-2 py-1">${wifiSharer.name}</td>
+            <td class="border px-2 py-1">${wifiSharer.agent || 'N/A'}</td>
+            <td class="border px-2 py-1">${agent.name || 'N/A'}</td>
+            <td class="border px-2 py-1">${wifiSharer.barangay || 'N/A'}</td>
+            <td class="border px-2 py-1">${wifiSharer.targetUsers || 'N/A'}</td>
+            <td class="border px-2 py-1">₱${totalSales.toLocaleString()}</td>
+            <td class="border px-2 py-1">₱${agentCommission.toLocaleString()}</td>
+            <td class="border px-2 py-1">₱${wifiPersonal.toLocaleString()}</td>
+            <td class="border px-2 py-1">${wifiSharer.registrationDate || 'N/A'}</td>
+        `;
+        reportList.appendChild(row);
+    });
+    
+    // Update summary totals
+    const totalSales = salesData.reduce((sum, sale) => sum + (parseFloat(sale.amount) || 0), 0);
+    const totalEwallet = ewalletData.reduce((sum, ewallet) => sum + (parseFloat(ewallet.amount) || 0), 0);
+    const totalCommission = totalSales * 0.05;
+    const totalCommunityPool = (totalSales * 0.50) + (totalEwallet * 0.70);
+    
+    // Update summary elements if they exist
+    const summaryTotalSales = document.getElementById('summaryTotalSales');
+    const summaryTotalEwallet = document.getElementById('summaryTotalEwallet');
+    const summaryTotalCommission = document.getElementById('summaryTotalCommission');
+    const summaryTotalCommunityPool = document.getElementById('summaryTotalCommunityPool');
+    
+    if (summaryTotalSales) summaryTotalSales.textContent = `₱${totalSales.toLocaleString()}`;
+    if (summaryTotalEwallet) summaryTotalEwallet.textContent = `₱${totalEwallet.toLocaleString()}`;
+    if (summaryTotalCommission) summaryTotalCommission.textContent = `₱${totalCommission.toLocaleString()}`;
+    if (summaryTotalCommunityPool) summaryTotalCommunityPool.textContent = `₱${totalCommunityPool.toLocaleString()}`;
+    
+    // Update All Transactions Report
+    updateAllSalesTransactionsReport();
+}
+
+function updateAntennaSponsorReport() {
+    const antennaData = JSON.parse(localStorage.getItem('antennaSponsorData')) || [];
+    const agentData = JSON.parse(localStorage.getItem('agentData')) || [];
+    const reportList = document.getElementById('antennaSponsorReportList');
+    
+    // Get current value per share from financial cards
+    const valuePerShareElement = document.getElementById('valuePerShare');
+    const currentValuePerShare = parseFloat(valuePerShareElement.textContent.replace('₱', '').replace(',', '')) || 0;
+    
+    reportList.innerHTML = '';
+    
+    antennaData.forEach(sponsor => {
+        const agent = agentData.find(a => a.id === sponsor.agent) || {};
+        const shareCount = sponsor.shareCount || 1;
+        const investmentAmount = sponsor.investmentAmount || 0;
+        const currentShareValue = shareCount * currentValuePerShare;
+        
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td class="border px-2 py-1">${sponsor.id}</td>
+            <td class="border px-2 py-1">${sponsor.name}</td>
+            <td class="border px-2 py-1">${sponsor.agent || 'N/A'}</td>
+            <td class="border px-2 py-1">${agent.name || 'N/A'}</td>
+            <td class="border px-2 py-1">₱${investmentAmount.toLocaleString()}</td>
+            <td class="border px-2 py-1">${shareCount}</td>
+            <td class="border px-2 py-1">₱${currentValuePerShare.toLocaleString()}</td>
+            <td class="border px-2 py-1">₱${currentShareValue.toLocaleString()}</td>
+            <td class="border px-2 py-1">${sponsor.registrationDate || 'N/A'}</td>
+        `;
+        reportList.appendChild(row);
+    });
+    
+    // Update All Transactions Report
+    updateAllSalesTransactionsReport();
+}
+
+function updateAgentDetailedCommissionReport() {
+    const salesData = JSON.parse(localStorage.getItem('salesData')) || [];
+    const agentData = JSON.parse(localStorage.getItem('agentData')) || [];
+    const wifiSharerData = JSON.parse(localStorage.getItem('wifiSharerData')) || [];
+    const reportList = document.getElementById('agentDetailedCommissionList');
+    
+    reportList.innerHTML = '';
+    
+    let totalSales = 0;
+    let totalCommission = 0;
+    const activeAgents = new Set();
+    
+    salesData.forEach(sale => {
+        const wifiSharer = wifiSharerData.find(w => w.id === sale.wifiSharerId);
+        const agent = agentData.find(a => a.id === sale.agent);
+        
+        if (wifiSharer && agent) {
+            const saleAmount = parseFloat(sale.amount) || 0;
+            const commission = saleAmount * 0.05;
+            
+            totalSales += saleAmount;
+            totalCommission += commission;
+            activeAgents.add(agent.id);
+            
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="border px-2 py-1">${agent.id}</td>
+                <td class="border px-2 py-1">${agent.name}</td>
+                <td class="border px-2 py-1">${wifiSharer.name}</td>
+                <td class="border px-2 py-1">${sale.date}</td>
+                <td class="border px-2 py-1">₱${saleAmount.toLocaleString()}</td>
+                <td class="border px-2 py-1">₱${commission.toLocaleString()}</td>
+                <td class="border px-2 py-1"><span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">Earned</span></td>
+            `;
+            reportList.appendChild(row);
+        }
+    });
+    
+    // Update summary
+    document.getElementById('agentTotalSales').textContent = `₱${totalSales.toLocaleString()}`;
+    document.getElementById('agentTotalCommission').textContent = `₱${totalCommission.toLocaleString()}`;
+    document.getElementById('activeAgentsCount').textContent = activeAgents.size;
+    document.getElementById('avgCommissionPerAgent').textContent = `₱${activeAgents.size > 0 ? (totalCommission / activeAgents.size).toLocaleString() : '0'}`;
+    
+    // Update All Transactions Report
+    updateAllSalesTransactionsReport();
+}
+
+function updateAllSalesTransactionsReport() {
+    const salesData = JSON.parse(localStorage.getItem('salesData')) || [];
+    const ewalletData = JSON.parse(localStorage.getItem('ewalletData')) || [];
+    const agentData = JSON.parse(localStorage.getItem('agentData')) || [];
+    const wifiSharerData = JSON.parse(localStorage.getItem('wifiSharerData')) || [];
+    const reportList = document.getElementById('allTransactionsList');
+    
+    if (!reportList) {
+        console.log('All Transactions list element not found');
+        return;
+    }
+    
+    reportList.innerHTML = '';
+    
+    // Process voucher sales
+    salesData.forEach(sale => {
+        const wifiSharer = wifiSharerData.find(w => w.id === sale.wifiSharerId);
+        const agent = agentData.find(a => a.id === sale.agent);
+        const saleAmount = parseFloat(sale.amount) || 0;
+        
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td class="border px-2 py-1">${sale.date}</td>
+            <td class="border px-2 py-1">Voucher</td>
+            <td class="border px-2 py-1">${sale.wifiSharerId || 'N/A'}</td>
+            <td class="border px-2 py-1">${wifiSharer ? wifiSharer.name : 'N/A'}</td>
+            <td class="border px-2 py-1">${agent ? agent.id : 'N/A'}</td>
+            <td class="border px-2 py-1">${agent ? agent.name : 'N/A'}</td>
+            <td class="border px-2 py-1">₱${saleAmount.toLocaleString()}</td>
+            <td class="border px-2 py-1">₱${(saleAmount * 0.05).toLocaleString()}</td>
+            <td class="border px-2 py-1">₱${(saleAmount * 0.40).toLocaleString()}</td>
+            <td class="border px-2 py-1">₱${(saleAmount * 0.50).toLocaleString()}</td>
+        `;
+        reportList.appendChild(row);
+    });
+    
+    // Process e-wallet transactions
+    ewalletData.forEach(ewallet => {
+        const ewalletAmount = parseFloat(ewallet.amount) || 0;
+        
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td class="border px-2 py-1">${ewallet.date}</td>
+            <td class="border px-2 py-1">E-wallet</td>
+            <td class="border px-2 py-1">N/A</td>
+            <td class="border px-2 py-1">N/A</td>
+            <td class="border px-2 py-1">N/A</td>
+            <td class="border px-2 py-1">N/A</td>
+            <td class="border px-2 py-1">₱${ewalletAmount.toLocaleString()}</td>
+            <td class="border px-2 py-1">₱0</td>
+            <td class="border px-2 py-1">₱0</td>
+            <td class="border px-2 py-1">₱${(ewalletAmount * 0.70).toLocaleString()}</td>
+        `;
+        reportList.appendChild(row);
+    });
+}
+
+// Export comprehensive report
+function exportComprehensiveReport() {
+    const agentData = JSON.parse(localStorage.getItem('agentData')) || [];
+    const wifiSharerData = JSON.parse(localStorage.getItem('wifiSharerData')) || [];
+    const antennaData = JSON.parse(localStorage.getItem('antennaSponsorData')) || [];
+    const salesData = JSON.parse(localStorage.getItem('salesData')) || [];
+    const ewalletData = JSON.parse(localStorage.getItem('ewalletData')) || [];
+    
+    // Create workbook
+    const wb = XLSX.utils.book_new();
+    
+    // WiFi Sharers Sheet
+    const wifiSharerReport = wifiSharerData.map(wifiSharer => {
+        const agent = agentData.find(a => a.id === wifiSharer.agent) || {};
+        const wifiSharerSales = salesData.filter(sale => sale.wifiSharerId === wifiSharer.id);
+        const totalSales = wifiSharerSales.reduce((sum, sale) => sum + (parseFloat(sale.amount) || 0), 0);
+        
+        return {
+            'WiFi Sharer ID': wifiSharer.id,
+            'Name': wifiSharer.name,
+            'Agent ID': wifiSharer.agent || 'N/A',
+            'Agent Name': agent.name || 'N/A',
+            'Barangay': wifiSharer.barangay || 'N/A',
+            'Target Users': wifiSharer.targetUsers || 'N/A',
+            'Total Sales': totalSales,
+            'Agent Commission (5%)': totalSales * 0.05,
+            'WiFi Personal (40%)': totalSales * 0.40,
+            'Registration Date': wifiSharer.registrationDate || 'N/A'
+        };
+    });
+    
+    // Antenna Sponsors Sheet
+    const valuePerShareElement = document.getElementById('valuePerShare');
+    const currentValuePerShare = parseFloat(valuePerShareElement.textContent.replace('₱', '').replace(',', '')) || 0;
+    
+    const antennaSponsorReport = antennaData.map(sponsor => {
+        const agent = agentData.find(a => a.id === sponsor.agent) || {};
+        const shareCount = sponsor.shareCount || 1;
+        const investmentAmount = sponsor.investmentAmount || 0;
+        
+        return {
+            'Antenna Sponsor ID': sponsor.id,
+            'Name': sponsor.name,
+            'Agent ID': sponsor.agent || 'N/A',
+            'Agent Name': agent.name || 'N/A',
+            'Investment Amount': investmentAmount,
+            'Share Count': shareCount,
+            'Value per Share': currentValuePerShare,
+            'Current Share Value': shareCount * currentValuePerShare,
+            'Registration Date': sponsor.registrationDate || 'N/A'
+        };
+    });
+    
+    // Agent Commission Details
+    const agentCommissionReport = [];
+    salesData.forEach(sale => {
+        const wifiSharer = wifiSharerData.find(w => w.id === sale.wifiSharerId);
+        const agent = agentData.find(a => a.id === sale.agent);
+        
+        if (wifiSharer && agent) {
+            const saleAmount = parseFloat(sale.amount) || 0;
+            agentCommissionReport.push({
+                'Agent ID': agent.id,
+                'Agent Name': agent.name,
+                'WiFi Sharer': wifiSharer.name,
+                'Sale Date': sale.date,
+                'Sale Amount': saleAmount,
+                'Commission (5%)': saleAmount * 0.05,
+                'Commission Status': 'Earned'
+            });
+        }
+    });
+    
+    // All Transactions
+    const allTransactions = [];
+    
+    // Add voucher sales
+    salesData.forEach(sale => {
+        const wifiSharer = wifiSharerData.find(w => w.id === sale.wifiSharerId);
+        const agent = agentData.find(a => a.id === sale.agent);
+        const saleAmount = parseFloat(sale.amount) || 0;
+        
+        allTransactions.push({
+            'Date': sale.date,
+            'Type': 'Voucher',
+            'WiFi Sharer ID': sale.wifiSharerId || 'N/A',
+            'WiFi Sharer Name': wifiSharer ? wifiSharer.name : 'N/A',
+            'Agent ID': agent ? agent.id : 'N/A',
+            'Agent Name': agent ? agent.name : 'N/A',
+            'Amount': saleAmount,
+            'Agent Commission': saleAmount * 0.05,
+            'WiFi Personal': saleAmount * 0.40,
+            'Community Pool': saleAmount * 0.50
+        });
+    });
+    
+    // Add e-wallet transactions
+    ewalletData.forEach(ewallet => {
+        const ewalletAmount = parseFloat(ewallet.amount) || 0;
+        allTransactions.push({
+            'Date': ewallet.date,
+            'Type': 'E-wallet',
+            'WiFi Sharer ID': 'N/A',
+            'WiFi Sharer Name': 'N/A',
+            'Agent ID': 'N/A',
+            'Agent Name': 'N/A',
+            'Amount': ewalletAmount,
+            'Agent Commission': 0,
+            'WiFi Personal': 0,
+            'Community Pool': ewalletAmount * 0.70
+        });
+    });
+    
+    // Create worksheets
+    const wifiWs = XLSX.utils.json_to_sheet(wifiSharerReport);
+    const antennaWs = XLSX.utils.json_to_sheet(antennaSponsorReport);
+    const agentWs = XLSX.utils.json_to_sheet(agentCommissionReport);
+    const transactionWs = XLSX.utils.json_to_sheet(allTransactions);
+    
+    // Add worksheets to workbook
+    XLSX.utils.book_append_sheet(wb, wifiWs, 'WiFi Sharers Report');
+    XLSX.utils.book_append_sheet(wb, antennaWs, 'Antenna Sponsors Report');
+    XLSX.utils.book_append_sheet(wb, agentWs, 'Agent Commission Details');
+    XLSX.utils.book_append_sheet(wb, transactionWs, 'All Transactions');
+    
+    // Export file
+    XLSX.writeFile(wb, `UHP_Comprehensive_Financial_Report_${new Date().toISOString().split('T')[0]}.xlsx`);
+    alert('📊 Comprehensive financial report exported successfully!');
+}
+
+// Import comprehensive report
+function importComprehensiveReport() {
+    document.getElementById('comprehensiveReportFile').click();
+}
+
+function handleComprehensiveImport(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+            
+            let importedSheets = [];
+            
+            // Import WiFi Sharers data if available
+            if (workbook.SheetNames.includes('WiFi Sharers Report')) {
+                const wifiSheet = workbook.Sheets['WiFi Sharers Report'];
+                const newWifiData = XLSX.utils.sheet_to_json(wifiSheet);
+                
+                // Update existing WiFi Sharer data
+                const currentWifiData = JSON.parse(localStorage.getItem('wifiSharerData')) || [];
+                newWifiData.forEach(importedWifi => {
+                    const existingIndex = currentWifiData.findIndex(w => w.id === importedWifi['WiFi Sharer ID']);
+                    if (existingIndex !== -1) {
+                        // Update existing record
+                        currentWifiData[existingIndex] = {
+                            ...currentWifiData[existingIndex],
+                            name: importedWifi['Name'],
+                            agent: importedWifi['Agent ID'],
+                            barangay: importedWifi['Barangay'],
+                            targetUsers: importedWifi['Target Users']
+                        };
+                    }
+                });
+                
+                localStorage.setItem('wifiSharerData', JSON.stringify(currentWifiData));
+                importedSheets.push('WiFi Sharers Report');
+            }
+            
+            // Import Antenna Sponsors data if available
+            if (workbook.SheetNames.includes('Antenna Sponsors Report')) {
+                const antennaSheet = workbook.Sheets['Antenna Sponsors Report'];
+                const newAntennaData = XLSX.utils.sheet_to_json(antennaSheet);
+                
+                // Update existing Antenna Sponsor data
+                const currentAntennaData = JSON.parse(localStorage.getItem('antennaSponsorData')) || [];
+                newAntennaData.forEach(importedAntenna => {
+                    const existingIndex = currentAntennaData.findIndex(a => a.id === importedAntenna['Antenna Sponsor ID']);
+                    if (existingIndex !== -1) {
+                        // Update existing record
+                        currentAntennaData[existingIndex] = {
+                            ...currentAntennaData[existingIndex],
+                            name: importedAntenna['Name'],
+                            agent: importedAntenna['Agent ID'],
+                            investmentAmount: importedAntenna['Investment Amount'],
+                            shareCount: importedAntenna['Share Count']
+                        };
+                    }
+                });
+                
+                localStorage.setItem('antennaSponsorData', JSON.stringify(currentAntennaData));
+                importedSheets.push('Antenna Sponsors Report');
+            }
+            
+            if (importedSheets.length > 0) {
+                // Update all displays
+                updateFinancialCards();
+                updateAgentIncomeReport();
+                updateComprehensiveReports();
+                populateWifiSharerDropdown();
+                updateSalesListDisplay();
+                updateEwalletListDisplay();
+                
+                alert(`✅ Successfully imported and updated data from: ${importedSheets.join(', ')}`);
+            } else {
+                alert('❌ No valid data sheets found in the imported file.');
+            }
+            
+        } catch (error) {
+            console.error('Import error:', error);
+            alert('❌ Error importing file. Please check the file format.');
+        }
+    };
+    
+    reader.readAsArrayBuffer(file);
+    event.target.value = ''; // Reset file input
+}
+
+// Initialize dashboard on page load
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Page loaded, updating financial cards...');
+    updateFinancialCards();
+    updateAgentIncomeReport();
+    updateComprehensiveReports();
+    populateWifiSharerDropdown();
+    updateSalesListDisplay();
+    updateEwalletListDisplay();
+});
+
+// Make functions globally accessible
+window.exportAllDataWithPassword = exportAllDataWithPassword;
+window.importExcelWithPasswordPrompt = importExcelWithPasswordPrompt;
+window.clearAllDataWithPassword = clearAllDataWithPassword;
+window.checkAdminPassword = checkAdminPassword;
+window.checkSalesAdminPassword = checkSalesAdminPassword;
+window.logoutSalesAdmin = logoutSalesAdmin;
+window.checkDataAdminPassword = checkDataAdminPassword;
+window.logoutDataAdmin = logoutDataAdmin;
+window.checkComprehensiveAdminPassword = checkComprehensiveAdminPassword;
+window.logoutComprehensiveAdmin = logoutComprehensiveAdmin;
+window.showRegistrationForm = showRegistrationForm;
+window.exportComprehensiveReport = exportComprehensiveReport;
+window.importComprehensiveReport = importComprehensiveReport;
+window.handleComprehensiveImport = handleComprehensiveImport;
+window.updateComprehensiveReports = updateComprehensiveReports;
+</script>
+</body>
+</html>

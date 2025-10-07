@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WiFi Sharer - UHP Bayanihan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Header Navigation */
+        .header {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+
+        .header .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #FFD700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        .header .logo i {
+            font-size: 2rem;
+            color: #FFD700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        .nav {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav a {
+            color: #FFD700;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        }
+
+        .nav a:hover {
+            color: #ffff00;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+        }
+
+        body {
+            padding-top: 80px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #667eea 100%);
+            min-height: 100vh;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans text-gray-800" style="font-family: 'Montserrat', sans-serif;">
+
+<!-- Header -->
+<header class="header">
+    <div class="container">
+        <div class="logo">
+            <i class="fas fa-wifi"></i>
+            <span>UHP Bayanihan</span>
+        </div>
+        <nav class="nav">
+            <a href="index.html">Home</a>
+            <a href="uhp-ecosystem.html">UHP Ecosystem</a>
+            <a href="marketing.html">Marketing</a>
+            <a href="wifi-sharer.html">WiFi Sharer</a>
+            <a href="antenna-sponsor.html">Antenna Sponsor</a>
+            <a href="business-card.html">Contact Us</a>
+        </nav>
+    </div>
+</header>
+
+<!-- Hero Section -->
+<section class="bg-gradient-to-b from-blue-600 to-blue-800 text-white py-20 px-4">
+    <div class="container mx-auto text-center">
+        <h1 class="text-5xl font-bold mb-6">📶 WiFi Sharer Program</h1>
+        <p class="text-xl mb-8 max-w-3xl mx-auto">
+            Maging bahagi ng UHP Bayanihan WiFi Sharer Program at kumita habang nagbabahagi ng internet connection sa inyong komunidad.
+        </p>
+        <div class="flex flex-col md:flex-row gap-4 justify-center">
+            <a href="#benefits" class="bg-yellow-400 text-blue-800 px-8 py-4 rounded-full font-bold text-lg hover:bg-yellow-300 transition-all transform hover:scale-105">
+                Alamin ang Benefits
+            </a>
+            <a href="#calculator" class="bg-transparent border-2 border-white text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white hover:text-blue-800 transition-all">
+                Calculate Income
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Benefits Section -->
+<section id="benefits" class="py-16 px-4 bg-white">
+    <div class="container mx-auto">
+        <h2 class="text-4xl font-bold text-center text-blue-800 mb-12">Mga Benefits ng WiFi Sharer</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Benefit 1 -->
+            <div class="bg-blue-50 p-6 rounded-lg shadow-lg text-center">
+                <div class="text-4xl mb-4">💰</div>
+                <h3 class="text-xl font-bold text-blue-800 mb-3">Passive Income</h3>
+                <p class="text-gray-700">Kumita ng ₱15,000-₱30,000 monthly sa pamamagitan ng pagbabahagi ng WiFi connection.</p>
+            </div>
+            
+            <!-- Benefit 2 -->
+            <div class="bg-green-50 p-6 rounded-lg shadow-lg text-center">
+                <div class="text-4xl mb-4">🤝</div>
+                <h3 class="text-xl font-bold text-green-800 mb-3">Community Impact</h3>
+                <p class="text-gray-700">Makatulong sa digital inclusion ng inyong barangay at komunidad.</p>
+            </div>
+            
+            <!-- Benefit 3 -->
+            <div class="bg-purple-50 p-6 rounded-lg shadow-lg text-center">
+                <div class="text-4xl mb-4">📈</div>
+                <h3 class="text-xl font-bold text-purple-800 mb-3">Scalable Business</h3>
+                <p class="text-gray-700">Pwedeng mag-expand at magkaroon ng multiple WiFi sharing points.</p>
+            </div>
+            
+            <!-- Benefit 4 -->
+            <div class="bg-orange-50 p-6 rounded-lg shadow-lg text-center">
+                <div class="text-4xl mb-4">🛠️</div>
+                <h3 class="text-xl font-bold text-orange-800 mb-3">Technical Support</h3>
+                <p class="text-gray-700">Makakakuha ng full technical support mula sa UHP team.</p>
+            </div>
+            
+            <!-- Benefit 5 -->
+            <div class="bg-red-50 p-6 rounded-lg shadow-lg text-center">
+                <div class="text-4xl mb-4">🎯</div>
+                <h3 class="text-xl font-bold text-red-800 mb-3">Flexible Schedule</h3>
+                <p class="text-gray-700">Walang fixed schedule - operate 24/7 automated system.</p>
+            </div>
+            
+            <!-- Benefit 6 -->
+            <div class="bg-indigo-50 p-6 rounded-lg shadow-lg text-center">
+                <div class="text-4xl mb-4">🏆</div>
+                <h3 class="text-xl font-bold text-indigo-800 mb-3">Revenue Sharing</h3>
+                <p class="text-gray-700">40% personal income + share sa community pool.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="py-16 px-4 bg-gray-100">
+    <div class="container mx-auto">
+        <h2 class="text-4xl font-bold text-center text-blue-800 mb-12">Paano Gumagana ang WiFi Sharing</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <!-- Step 1 -->
+            <div class="text-center">
+                <div class="bg-blue-600 text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">1</div>
+                <h3 class="text-xl font-bold text-blue-800 mb-3">Setup WiFi Hotspot</h3>
+                <p class="text-gray-700">I-setup ang WiFi hotspot gamit ang inyong existing internet connection.</p>
+            </div>
+            
+            <!-- Step 2 -->
+            <div class="text-center">
+                <div class="bg-green-600 text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">2</div>
+                <h3 class="text-xl font-bold text-green-800 mb-3">Install UHP System</h3>
+                <p class="text-gray-700">I-install ang UHP voucher system para sa automated billing.</p>
+            </div>
+            
+            <!-- Step 3 -->
+            <div class="text-center">
+                <div class="bg-purple-600 text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">3</div>
+                <h3 class="text-xl font-bold text-purple-800 mb-3">Start Sharing</h3>
+                <p class="text-gray-700">Simulan ang pagbenta ng WiFi vouchers sa inyong area.</p>
+            </div>
+            
+            <!-- Step 4 -->
+            <div class="text-center">
+                <div class="bg-orange-600 text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">4</div>
+                <h3 class="text-xl font-bold text-orange-800 mb-3">Earn Income</h3>
+                <p class="text-gray-700">Kumita ng passive income habang tumutulong sa komunidad.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Income Calculator Section -->
+<section id="calculator" class="py-16 px-4 bg-white">
+    <div class="container mx-auto max-w-4xl">
+        <h2 class="text-4xl font-bold text-center text-blue-800 mb-12">WiFi Sharer Income Calculator</h2>
+        
+        <div class="bg-blue-50 p-8 rounded-lg shadow-lg">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Input Section -->
+                <div>
+                    <h3 class="text-2xl font-bold text-blue-800 mb-6">Calculate Your Potential Income</h3>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Daily Users</label>
+                            <input type="number" id="dailyUsers" value="50" min="1" max="1000" 
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <p class="text-xs text-gray-600 mt-1">Average number of users per day</p>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Average Voucher Price (₱)</label>
+                            <input type="number" id="voucherPrice" value="10" min="1" max="100" 
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <p class="text-xs text-gray-600 mt-1">Typical voucher price in your area</p>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Operating Days per Month</label>
+                            <input type="number" id="operatingDays" value="30" min="1" max="31" 
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <p class="text-xs text-gray-600 mt-1">Days you'll operate per month</p>
+                        </div>
+                        
+                        <button onclick="calculateIncome()" 
+                                class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold text-lg hover:bg-blue-700 transition-colors">
+                            Calculate Income
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Results Section -->
+                <div>
+                    <h3 class="text-2xl font-bold text-blue-800 mb-6">Your Potential Earnings</h3>
+                    
+                    <div class="space-y-4">
+                        <div class="bg-white p-4 rounded-lg border-l-4 border-green-500">
+                            <h4 class="font-bold text-gray-700">Monthly Gross Revenue</h4>
+                            <p class="text-2xl font-bold text-green-600" id="grossRevenue">₱15,000</p>
+                        </div>
+                        
+                        <div class="bg-white p-4 rounded-lg border-l-4 border-blue-500">
+                            <h4 class="font-bold text-gray-700">Your Personal Share (40%)</h4>
+                            <p class="text-2xl font-bold text-blue-600" id="personalShare">₱6,000</p>
+                        </div>
+                        
+                        <div class="bg-white p-4 rounded-lg border-l-4 border-purple-500">
+                            <h4 class="font-bold text-gray-700">Community Pool Share</h4>
+                            <p class="text-xl font-bold text-purple-600" id="communityShare">₱4,500</p>
+                            <p class="text-xs text-gray-600">Shared among all WiFi & Antenna members</p>
+                        </div>
+                        
+                        <div class="bg-white p-4 rounded-lg border-l-4 border-orange-500">
+                            <h4 class="font-bold text-gray-700">Annual Personal Income</h4>
+                            <p class="text-2xl font-bold text-orange-600" id="annualIncome">₱72,000</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Requirements Section -->
+<section class="py-16 px-4 bg-gray-100">
+    <div class="container mx-auto">
+        <h2 class="text-4xl font-bold text-center text-blue-800 mb-12">Requirements para maging WiFi Sharer</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <!-- Technical Requirements -->
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h3 class="text-2xl font-bold text-blue-800 mb-4">📋 Technical Requirements</h3>
+                <ul class="space-y-3">
+                    <li class="flex items-start">
+                        <span class="text-green-500 mr-2">✓</span>
+                        <span>Stable internet connection (minimum 100 Mbps)</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-green-500 mr-2">✓</span>
+                        <span>WiFi router (pwedeng existing o bago)</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-green-500 mr-2">✓</span>
+                        <span>Computer o smartphone para sa monitoring</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-green-500 mr-2">✓</span>
+                        <span>Dedicated space para sa equipment</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Business Requirements -->
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h3 class="text-2xl font-bold text-blue-800 mb-4">🏢 Business Requirements</h3>
+                <ul class="space-y-3">
+                    <li class="flex items-start">
+                        <span class="text-green-500 mr-2">✓</span>
+                        <span>Valid ID at contact information</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-green-500 mr-2">✓</span>
+                        <span>Proof of address (utility bill)</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-green-500 mr-2">✓</span>
+                        <span>Commitment sa UHP Bayanihan program</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-green-500 mr-2">✓</span>
+                        <span>Willingness to help community</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-16 px-4 bg-blue-600 text-white">
+    <div class="container mx-auto text-center">
+        <h2 class="text-4xl font-bold mb-6">Ready to Start Your WiFi Sharing Business?</h2>
+        <p class="text-xl mb-8 max-w-2xl mx-auto">
+            Sumali sa UHP Bayanihan WiFi Sharer Program ngayon at simulan ang inyong journey towards financial freedom habang nakakatulong sa komunidad.
+        </p>
+        <div class="flex flex-col md:flex-row gap-4 justify-center">
+            <a href="uhp-ecosystem.html" class="bg-yellow-400 text-blue-800 px-8 py-4 rounded-full font-bold text-lg hover:bg-yellow-300 transition-all transform hover:scale-105">
+                Register Now
+            </a>
+            <a href="marketing.html" class="bg-transparent border-2 border-white text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white hover:text-blue-800 transition-all">
+                Learn More
+            </a>
+        </div>
+    </div>
+</section>
+
+<script>
+function calculateIncome() {
+    const dailyUsers = parseInt(document.getElementById('dailyUsers').value) || 0;
+    const voucherPrice = parseInt(document.getElementById('voucherPrice').value) || 0;
+    const operatingDays = parseInt(document.getElementById('operatingDays').value) || 0;
+    
+    const monthlyGross = dailyUsers * voucherPrice * operatingDays;
+    const personalShare = monthlyGross * 0.40;
+    const communityShare = monthlyGross * 0.30;
+    const annualPersonal = personalShare * 12;
+    
+    document.getElementById('grossRevenue').textContent = `₱${monthlyGross.toLocaleString()}`;
+    document.getElementById('personalShare').textContent = `₱${personalShare.toLocaleString()}`;
+    document.getElementById('communityShare').textContent = `₱${communityShare.toLocaleString()}`;
+    document.getElementById('annualIncome').textContent = `₱${annualPersonal.toLocaleString()}`;
+}
+
+// Calculate initial values on page load
+document.addEventListener('DOMContentLoaded', function() {
+    calculateIncome();
+});
+</script>
+
+</body>
+</html>
