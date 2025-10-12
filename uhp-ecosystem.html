@@ -546,66 +546,136 @@ body {
       <div class="bg-white p-6 rounded-lg shadow-lg border">
         <h3 class="text-xl font-semibold text-gray-800 mb-4">📝 Member Registration</h3>
         
-        <!-- Registration Type Selector -->
-        <div class="mb-4">
-          <label class="block mb-2 font-semibold">Select Registration Type:</label>
-          <select id="registrationType" class="w-full border-2 border-blue-300 rounded-lg px-3 py-2 text-sm font-medium bg-white">
-            <option value="">-- Choose Registration Type --</option>
-            <option value="agent">👥 UHP Agent</option>
-            <option value="wifi">📶 WiFi Sharer</option>
-            <option value="antenna">📡 Antenna Sponsor</option>
-          </select>
+        <!-- Admin Password Section -->
+        <div id="memberRegistrationPasswordSection" class="text-center">
+          <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+            <i class="fas fa-lock text-red-600 text-2xl mb-2"></i>
+            <h4 class="font-semibold text-red-800 mb-2">🔐 Admin Access Required</h4>
+            <p class="text-xs text-gray-600 mb-4">Enter admin password to access member registration</p>
+          </div>
+          
+          <div class="max-w-xs mx-auto">
+            <label class="block mb-1 font-semibold text-sm">Admin Password</label>
+            <input type="password" id="memberRegistrationAdminPassword" placeholder="Enter admin password" class="w-full border rounded px-3 py-2 text-sm" required>
+          </div>
+          
+          <button onclick="checkMemberRegistrationAdminPassword()" class="w-full bg-red-600 text-white py-2 rounded hover:bg-red-700 text-sm font-semibold mt-3">🔓 Login as Admin</button>
         </div>
 
-        <!-- Unified Registration Form -->
-        <div id="unifiedFormContainer" style="display: none;">
-          <form id="unifiedForm" class="space-y-3 border-2 p-4 rounded-lg bg-gray-50">
-            
-            <!-- Common Fields -->
-            <div>
-              <label class="block mb-1 font-semibold text-sm">Full Name</label>
-              <input type="text" id="memberName" placeholder="Enter full name" class="w-full border rounded px-3 py-2 text-sm" required>
-            </div>
-            
-            <div>
-              <label class="block mb-1 font-semibold text-sm">Phone Number</label>
-              <input type="text" id="memberPhone" placeholder="Enter phone number" class="w-full border rounded px-3 py-2 text-sm" required>
-            </div>
-            
-            <div>
-              <label class="block mb-1 font-semibold text-sm">Address</label>
-              <input type="text" id="memberAddress" placeholder="Enter address" class="w-full border rounded px-3 py-2 text-sm" required>
-            </div>
+        <!-- Registration Form (Hidden by default) -->
+        <div id="memberRegistrationFormSection" style="display: none;">
+          <!-- Registration Type Selector -->
+          <div class="mb-4">
+            <label class="block mb-2 font-semibold">Select Registration Type:</label>
+            <select id="registrationType" class="w-full border-2 border-blue-300 rounded-lg px-3 py-2 text-sm font-medium bg-white">
+              <option value="">-- Choose Registration Type --</option>
+              <option value="agent">👥 UHP Agent</option>
+              <option value="wifi">📶 WiFi Sharer</option>
+              <option value="antenna">📡 Antenna Sponsor</option>
+            </select>
+          </div>
 
-            <!-- Agent Selection (for WiFi Sharer and Antenna Sponsor) -->
-            <div id="agentSelectionField" style="display: none;">
-              <label class="block mb-1 font-semibold text-sm">Select Agent</label>
-              <select id="memberAgent" class="w-full border rounded px-3 py-2 text-sm"></select>
-            </div>
-
-            <!-- WiFi Sharer Specific Fields -->
-            <div id="wifiSpecificFields" style="display: none;">
+          <!-- Unified Registration Form -->
+          <div id="unifiedFormContainer" style="display: none;">
+            <form id="unifiedForm" class="space-y-3 border-2 p-4 rounded-lg bg-gray-50">
+              
+              <!-- Common Fields -->
               <div>
-                <label class="block mb-1 font-semibold text-sm">Barangay</label>
-                <input type="text" id="memberBarangay" placeholder="Enter barangay" class="w-full border rounded px-3 py-2 text-sm">
+                <label class="block mb-1 font-semibold text-sm">Full Name</label>
+                <input type="text" id="memberName" placeholder="Enter full name" class="w-full border rounded px-3 py-2 text-sm" required>
               </div>
+              
               <div>
-                <label class="block mb-1 font-semibold text-sm">Monthly Target Users</label>
-                <input type="number" id="memberTargetUsers" placeholder="500" value="500" class="w-full border rounded px-3 py-2 text-sm">
+                <label class="block mb-1 font-semibold text-sm">Phone Number</label>
+                <input type="tel" id="memberPhone" placeholder="09xxxxxxxxx (11 digits)" pattern="09[0-9]{9}" maxlength="11" class="w-full border rounded px-3 py-2 text-sm" required>
+                <small class="text-gray-500 text-xs">Format: 09xxxxxxxxx (11 digits starting with 09)</small>
               </div>
-            </div>
+              
+              <!-- Address Dropdown System -->
+              <div class="space-y-3">
+                <label class="block mb-1 font-semibold text-sm">📍 Complete Address</label>
+                
+                <!-- Region -->
+                <div>
+                  <label class="block mb-1 text-xs text-gray-600">Region</label>
+                  <select id="memberRegion" class="w-full border rounded px-3 py-2 text-sm" required onchange="populateProvinces()">
+                    <option value="">-- Select Region --</option>
+                  </select>
+                </div>
+                
+                <!-- Province -->
+                <div>
+                  <label class="block mb-1 text-xs text-gray-600">Province</label>
+                  <select id="memberProvince" class="w-full border rounded px-3 py-2 text-sm" required onchange="populateCities()" disabled>
+                    <option value="">-- Select Province --</option>
+                  </select>
+                </div>
+                
+                <!-- City/Municipality -->
+                <div>
+                  <label class="block mb-1 text-xs text-gray-600">City/Municipality</label>
+                  <select id="memberCity" class="w-full border rounded px-3 py-2 text-sm" required onchange="populateBarangays()" disabled>
+                    <option value="">-- Select City/Municipality --</option>
+                  </select>
+                </div>
+                
+                <!-- Barangay -->
+                <div>
+                  <label class="block mb-1 text-xs text-gray-600">Barangay</label>
+                  <select id="memberBarangay" class="w-full border rounded px-3 py-2 text-sm" required disabled>
+                    <option value="">-- Select Barangay --</option>
+                  </select>
+                </div>
+                
+                <!-- Street/House Number (Optional) -->
+                <div>
+                  <label class="block mb-1 text-xs text-gray-600">Street/House Number (Optional)</label>
+                  <input type="text" id="memberStreet" placeholder="e.g., 123 Rizal Street" class="w-full border rounded px-3 py-2 text-sm">
+                </div>
+              </div>
 
-            <!-- Dynamic ID Display -->
-            <div id="memberIdDisplay" class="text-center p-2 bg-gray-100 rounded">
-              <span class="font-semibold text-sm">Member ID: </span>
-              <span id="memberIdPreview" class="font-bold text-blue-600">---</span>
-            </div>
+              <!-- Agent Selection (for WiFi Sharer and Antenna Sponsor) -->
+              <div id="agentSelectionField" style="display: none;">
+                <label class="block mb-1 font-semibold text-sm">Select Agent</label>
+                <select id="memberAgent" class="w-full border rounded px-3 py-2 text-sm"></select>
+              </div>
 
-            <!-- Submit Button -->
-            <button type="submit" id="submitButton" class="w-full py-2 rounded-lg text-white font-bold text-sm transition-colors">
-              Register Member
+              <!-- WiFi Sharer Specific Fields -->
+              <div id="wifiSpecificFields" style="display: none;">
+                <div>
+                  <label class="block mb-1 font-semibold text-sm">Monthly Target Users</label>
+                  <input type="number" id="memberTargetUsers" placeholder="500" value="500" class="w-full border rounded px-3 py-2 text-sm">
+                </div>
+                <div>
+                  <label class="block mb-1 font-semibold text-sm">Antenna MacAddress</label>
+                  <input type="text" id="memberMacAddress" placeholder="00:00:00:00:00:00" 
+                         class="w-full border rounded px-3 py-2 text-sm"
+                         title="Enter hexadecimal MAC address"
+                         oninput="formatMacAddress(this)"
+                         maxlength="17">
+                  <small class="text-gray-500 text-xs">Format: Auto-formats as you type (0-9, A-F)</small>
+                </div>
+              </div>
+
+              <!-- Dynamic ID Display -->
+              <div id="memberIdDisplay" class="text-center p-2 bg-gray-100 rounded">
+                <span class="font-semibold text-sm">Member ID: </span>
+                <span id="memberIdPreview" class="font-bold text-blue-600">---</span>
+              </div>
+
+              <!-- Submit Button -->
+              <button type="submit" id="submitButton" class="w-full py-2 rounded-lg text-white font-bold text-sm transition-colors">
+                Register Member
+              </button>
+            </form>
+          </div>
+
+          <!-- Admin Logout Button -->
+          <div class="mt-4 text-center">
+            <button onclick="logoutMemberRegistrationAdmin()" class="text-red-600 hover:text-red-800 text-sm font-semibold">
+              🔒 Logout Admin
             </button>
-          </form>
+          </div>
         </div>
       </div>
     </div>
@@ -732,6 +802,7 @@ body {
               <th class="p-2 text-left">Agent Name</th>
               <th class="p-2 text-left">Barangay</th>
               <th class="p-2 text-left">Target Users</th>
+              <th class="p-2 text-left">MAC Address</th>
               <th class="p-2 text-left">Total Sales</th>
               <th class="p-2 text-left">Agent Commission (5%)</th>
               <th class="p-2 text-left">WiFi Personal (40%)</th>
@@ -1433,15 +1504,420 @@ function updateAllDisplays() {
 
 
 
+// Philippine Address Data Structure
+const philippineAddressData = {
+    "Region IV-A (CALABARZON)": {
+        "Laguna": {
+            "Santa Rosa": [
+                "Aplaya", "Balibago", "Caingin", "Dila", "Dita", "Don Jose", 
+                "Ibaba", "Kanluran", "Labas", "Macabling", "Malitlit", "Malusak", 
+                "Market Area", "Pooc", "Pulong Santa Cruz", "Santo Domingo", 
+                "Sinalhan", "Tagapo", "Barangay XVIII (Poblacion)"
+            ],
+            "Biñan": [
+                "Biñan", "Bungahan", "Canlalay", "Casile", "De La Paz", "Ganado",
+                "Langkiwa", "Loma", "Malaban", "Malamig", "Mamplasan", "Platero",
+                "Poblacion", "San Antonio", "San Francisco", "San Jose", "San Vicente",
+                "Santo Domingo", "Santo Niño", "Santo Tomas", "Soro-soro", "Timbao",
+                "Tubigan", "Zapote"
+            ],
+            "Calamba": [
+                "Bagong Kalsada", "Banadero", "Banlic", "Barandal", "Batino", "Bubuyan",
+                "Bucal", "Bunggo", "Burol", "Camaligan", "Canlubang", "Halang", "Hornalan",
+                "Kay-Anlog", "La Mesa", "Laguerta", "Lawa", "Lecheria", "Lingga", "Looc",
+                "Mabato", "Majada-Labas", "Makiling", "Mapagong", "Masili", "Maunong",
+                "Mayapa", "Milagrosa", "Paciano Rizal", "Palingon", "Palo-Alto", "Pansol",
+                "Parian", "Poblacion", "Punta", "Puting Lupa", "Real", "Saimsim",
+                "Sampiruhan", "San Cristobal", "San Jose", "San Juan", "Sirang Lupa",
+                "Sucol", "Turbina", "Ulango", "Uwisan"
+            ],
+            "Los Baños": [
+                "Anos", "Bagong Silang", "Bambang", "Batong Malake", "Baybayin", "Bayog",
+                "Lalakay", "Maahas", "Malinta", "Mayondon", "Poblacion", "Putho-Tuntungin",
+                "San Antonio", "Tadlac", "Timugan"
+            ],
+            "San Pedro": [
+                "Bagong Silang", "Calendola", "Chrysanthemum", "Cuyab", "Estrella",
+                "G.S.I.S.", "Landayan", "Laram", "Magsaysay", "Maharlika", "Narra",
+                "Nueva", "Pacita 1", "Pacita 2", "Poblacion", "Riverside", "Rosario",
+                "Sampaguita", "San Antonio", "San Roque", "San Vicente", "Santo Niño",
+                "United Bayanihan", "United Paraiso"
+            ]
+        },
+        "Cavite": {
+            "Bacoor": [
+                "Alima", "Aniban I", "Aniban II", "Aniban III", "Aniban IV", "Aniban V",
+                "Banalo", "Bayanan", "Campo Santo", "Dasmariñas", "Digman", "Dulong Bayan",
+                "Habay I", "Habay II", "Kaingin", "Ligas I", "Ligas II", "Ligas III",
+                "Mabolo I", "Mabolo II", "Mabolo III", "Maliksi I", "Maliksi II", "Maliksi III",
+                "Molino I", "Molino II", "Molino III", "Molino IV", "Molino V", "Molino VI",
+                "Molino VII", "Niog I", "Niog II", "Niog III", "Panapaan I", "Panapaan II",
+                "Panapaan III", "Panapaan IV", "Panapaan V", "Panapaan VI", "Panapaan VII",
+                "Panapaan VIII", "Queens Row Central", "Queens Row East", "Queens Row West",
+                "Real I", "Real II", "Salinas I", "Salinas II", "Salinas III", "Salinas IV",
+                "San Nicolas I", "San Nicolas II", "San Nicolas III", "Springville",
+                "Tabing Dagat", "Talaba I", "Talaba II", "Talaba III", "Talaba IV",
+                "Talaba V", "Talaba VI", "Talaba VII", "Zapote I", "Zapote II", "Zapote III",
+                "Zapote IV", "Zapote V"
+            ],
+            "Dasmariñas": [
+                "Bagong Bayan", "Burol I", "Burol II", "Burol III", "Datu Esmael",
+                "Fatima I", "Fatima II", "Fatima III", "Langkaan I", "Langkaan II",
+                "Luzviminda I", "Luzviminda II", "Paliparan I", "Paliparan II", "Paliparan III",
+                "Sabang", "Salawag", "Sampaloc I", "Sampaloc II", "Sampaloc III", "Sampaloc IV",
+                "San Agustin I", "San Agustin II", "San Agustin III", "San Jose",
+                "San Miguel I", "San Miguel II", "Zone I (Poblacion)", "Zone II (Poblacion)",
+                "Zone III (Poblacion)", "Zone IV (Poblacion)"
+            ]
+        },
+        "Batangas": {
+            "Lipa": [
+                "Adya", "Anilao", "Anilao-Labac", "Antipolo del Norte", "Antipolo del Sur",
+                "Bagong Pook", "Balintawak", "Banaybanay", "Bolbok", "Bugtong na Pulo",
+                "Bulacnin", "Bulaklakan", "Calamias", "Cumba", "Dagatan", "Duhatan",
+                "Halang", "Inosluban", "Kayumanggi", "Latag", "Lodlod", "Lumbang",
+                "Mabini", "Malagonlong", "Marawoy", "Marauoy", "Mataas na Lupa",
+                "Munting Pulo", "Pagolingin Bata", "Pagolingin East", "Pagolingin West",
+                "Pangao", "Pinagkawitan", "Pinagtongulan", "Plaridel", "Poblacion Barangay 1",
+                "Poblacion Barangay 2", "Poblacion Barangay 3", "Poblacion Barangay 4",
+                "Poblacion Barangay 5", "Poblacion Barangay 6", "Poblacion Barangay 7",
+                "Poblacion Barangay 8", "Poblacion Barangay 9", "Poblacion Barangay 9-A",
+                "Poblacion Barangay 10", "Poblacion Barangay 11", "Poblacion Barangay 12",
+                "Pusil", "Quezon", "Rizal", "Sabang", "Sampaguita", "San Benito",
+                "San Carlos", "San Celestino", "San Francisco", "San Guillermo",
+                "San Jose", "San Lucas", "San Salvador", "San Sebastian", "Santo Niño",
+                "Santo Toribio", "Sapac", "Sico", "Talisay", "Tambo", "Tangob",
+                "Tanguay", "Tibig", "Tipacan"
+            ]
+        },
+        "Rizal": {
+            "Antipolo": [
+                "Bagong Nayon", "Beverly Hills", "Calawis", "Cupang", "Dalig", "dela Paz",
+                "Inarawan", "Mambugan", "Mayamot", "San Isidro", "San Jose", "San Luis",
+                "San Roque", "Santa Cruz", "Santo Niño", "Taktak"
+            ]
+        },
+        "Quezon": {
+            "Lucena": [
+                "Barangay 1 (Poblacion)", "Barangay 2 (Poblacion)", "Barangay 3 (Poblacion)", 
+                "Barangay 4 (Poblacion)", "Barangay 5 (Poblacion)", "Barangay 6 (Poblacion)", 
+                "Barangay 7 (Poblacion)", "Barangay 8 (Poblacion)", "Barangay 9 (Poblacion)", 
+                "Barangay 10 (Poblacion)", "Barra", "Bocohan", "Cotta", "Dalahican", 
+                "Domoit", "Gulang-Gulang", "Ibabang Dupay", "Ibabang Iyam", "Ibabang Talim", 
+                "Ilayang Dupay", "Ilayang Iyam", "Ilayang Talim", "Isabang", "Kanlurang Mayao",
+                "Kulapi", "Mayao Castillo", "Mayao Crossing", "Mayao Kanluran",
+                "Mayao Parada", "Ransohan", "Salinas", "Silangang Mayao"
+            ]
+        }
+    },
+    "National Capital Region (NCR)": {
+        "Metro Manila": {
+            "Manila": [
+                "Barangay 1 (District I)", "Barangay 2 (District I)", "Barangay 3 (District I)",
+                "Barangay 4 (District I)", "Barangay 5 (District I)", "Barangay 6 (District I)",
+                "Binondo", "Ermita", "Intramuros", "Malate", "Paco", "Pandacan", 
+                "Port Area", "Quiapo", "Sampaloc", "San Andres", "San Miguel", 
+                "San Nicolas", "Santa Ana", "Santa Cruz", "Santa Mesa", "Tondo",
+                "Barangay 267 (Binondo)", "Barangay 268 (Binondo)", "Barangay 269 (Binondo)",
+                "Barangay 270 (Binondo)", "Barangay 271 (Binondo)", "Barangay 272 (Binondo)",
+                "Barangay 273 (Binondo)", "Barangay 274 (Binondo)", "Barangay 275 (Binondo)",
+                "Barangay 276 (Binondo)", "Barangay 277 (Binondo)", "Barangay 278 (Binondo)",
+                "Barangay 279 (Binondo)", "Barangay 280 (Binondo)", "Barangay 281 (Binondo)",
+                "Barangay 282 (Binondo)", "Barangay 283 (Binondo)", "Barangay 284 (Binondo)",
+                "Barangay 285 (Binondo)", "Barangay 286 (Binondo)", "Barangay 287 (Binondo)",
+                "Barangay 288 (Binondo)", "Barangay 289 (Binondo)", "Barangay 290 (Binondo)"
+            ],
+            "Quezon City": [
+                "Alicia", "Amihan", "Apolonio Samson", "Aurora", "Baesa", "Bagbag",
+                "Bagong Lipunan ng Crame", "Bagong Pag-asa", "Bagong Silangan",
+                "Balintawak", "Batasan Hills", "Bayanihan", "Blue Ridge A", "Blue Ridge B",
+                "Botocan", "Bungad", "Camp Aguinaldo", "Central", "Claro", "Commonwealth",
+                "Culiat", "Damar", "Damayan", "Damayang Lagi", "Del Monte", "Diliman",
+                "Don Manuel", "Doña Imelda", "Doña Josefa", "Duyan-Duyan", "E. Rodriguez",
+                "East Kamias", "Escopa I", "Escopa II", "Escopa III", "Escopa IV",
+                "Fairview", "Greater Lagro", "Gulod", "Holy Spirit", "Horseshoe",
+                "Immaculate Conception", "Kaligayahan", "Kalusugan", "Kamuning",
+                "Katipunan", "Kaunlaran", "Kristong Hari", "Krus na Ligas", "Laging Handa",
+                "Libis", "Lourdes", "Loyola Heights", "Maharlika", "Malaya", "Mariana",
+                "Mariblo", "Marilag", "Masambong", "Matandang Balara", "Milagrosa",
+                "N.S. Amoranto", "Nagkaisang Nayon", "Nayong Kanluran", "New Era",
+                "North Fairview", "Novaliches Proper", "Obrero", "Old Balara", "Paang Bundok",
+                "Pag-ibig sa Nayon", "Paligsahan", "Paltok", "Paraiso", "Pasong Putik Proper",
+                "Pasong Tamo", "Payatas", "Phil-Am", "Pinagkaisahan", "Pinyahan",
+                "Project 6", "Project 7", "Project 8", "Quirino 2-A", "Quirino 2-B",
+                "Quirino 2-C", "Quirino 3-A", "Ramón Magsaysay", "Roxas", "Sacred Heart",
+                "Saint Ignatius", "Saint Peter", "Salvacion", "San Agustin", "San Antonio",
+                "San Bartolome", "San Isidro Labrador", "San Jose", "San Martin de Porres",
+                "San Roque", "San Vicente", "Sangandaan", "Santa Lucia", "Santa Monica",
+                "Santa Teresita", "Santo Cristo", "Santo Domingo", "Santo Niño",
+                "Santol", "Sauyo", "Sienna", "Silangan", "Socorro", "South Triangle",
+                "Tagumpay", "Talayan", "Tandang Sora", "Tatalon", "Teachers Village East",
+                "Teachers Village West", "Ugong Norte", "Unang Sigaw", "UP Campus",
+                "Valencia", "Vasra", "Veterans Village", "Villa Maria Clara",
+                "West Kamias", "West Triangle", "White Plains"
+            ],
+            "Makati": [
+                "Bangkal", "Bel-Air", "Carmona", "Cembo", "Comembo", "Dasmariñas",
+                "East Rembo", "Forbes Park", "Guadalupe Nuevo", "Guadalupe Viejo",
+                "Kasilawan", "La Paz", "Magallanes", "Olympia", "Palanan", "Pembo",
+                "Pinagkaisahan", "Pio del Pilar", "Pitogo", "Poblacion", "Post Proper Northside",
+                "Post Proper Southside", "Rizal", "San Antonio", "San Isidro", "San Lorenzo",
+                "Santa Cruz", "Singkamas", "South Cembo", "Tejeros", "Urdaneta", "Valenzuela",
+                "West Rembo"
+            ]
+        }
+    },
+    "Region III (Central Luzon)": {
+        "Bulacan": {
+            "Malolos": [
+                "Anilao", "Atlag", "Babatnin", "Bagna", "Bagong Nayon", "Balayong",
+                "Balite", "Bangkal", "Barihan", "Bulihan", "Bungahan", "Caingin",
+                "Calero", "Caliligawan", "Canalate", "Caniogan", "Catmon", "Cofradia",
+                "Dakila", "Guinhawa", "Ligas", "Longos", "Look 1st", "Look 2nd",
+                "Lugam", "Mabolo", "Mojon", "Namayan", "Niugan", "Pamarawan",
+                "Panasahan", "Pinagbakahan", "San Agustin", "San Gabriel", "San Juan",
+                "San Pablo", "San Vicente", "Santiago", "Santisima Trinidad", "Santo Cristo",
+                "Santo Niño", "Santo Rosario", "Sumapang Bata", "Sumapang Matanda",
+                "Taal", "Tikay"
+            ]
+        },
+        "Pampanga": {
+            "San Fernando": [
+                "Alasas", "Baliti", "Bulaon", "Calulut", "Dela Paz Norte", "Dela Paz Sur",
+                "Dolores", "Juliana", "Lara", "Lourdes", "Magliman", "Maimpis",
+                "Malino", "Malpitic", "Panipuan", "Panlumacan", "Pulung Bulu",
+                "Quebiawan", "San Agustin", "San Felipe", "San Isidro", "San Jose",
+                "San Juan", "San Nicolas", "San Pedro", "Santa Lucia", "Santa Teresita",
+                "Santo Niño", "Santo Rosario", "Sindalan", "Telabastagan"
+            ]
+        }
+    }
+};
+
+// Initialize address dropdowns when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    populateRegions();
+});
+
+// Populate regions dropdown
+function populateRegions() {
+    const regionSelect = document.getElementById('memberRegion');
+    if (!regionSelect) return;
+    
+    regionSelect.innerHTML = '<option value="">-- Select Region --</option>';
+    
+    Object.keys(philippineAddressData).forEach(region => {
+        const option = document.createElement('option');
+        option.value = region;
+        option.textContent = region;
+        regionSelect.appendChild(option);
+    });
+}
+
+// Populate provinces based on selected region
+function populateProvinces() {
+    const regionSelect = document.getElementById('memberRegion');
+    const provinceSelect = document.getElementById('memberProvince');
+    const citySelect = document.getElementById('memberCity');
+    const barangaySelect = document.getElementById('memberBarangay');
+    
+    if (!regionSelect || !provinceSelect) return;
+    
+    const selectedRegion = regionSelect.value;
+    
+    // Reset dependent dropdowns
+    provinceSelect.innerHTML = '<option value="">-- Select Province --</option>';
+    citySelect.innerHTML = '<option value="">-- Select City/Municipality --</option>';
+    barangaySelect.innerHTML = '<option value="">-- Select Barangay --</option>';
+    
+    // Disable dependent dropdowns
+    provinceSelect.disabled = !selectedRegion;
+    citySelect.disabled = true;
+    barangaySelect.disabled = true;
+    
+    if (selectedRegion && philippineAddressData[selectedRegion]) {
+        Object.keys(philippineAddressData[selectedRegion]).forEach(province => {
+            const option = document.createElement('option');
+            option.value = province;
+            option.textContent = province;
+            provinceSelect.appendChild(option);
+        });
+    }
+}
+
+// Populate cities based on selected province
+function populateCities() {
+    const regionSelect = document.getElementById('memberRegion');
+    const provinceSelect = document.getElementById('memberProvince');
+    const citySelect = document.getElementById('memberCity');
+    const barangaySelect = document.getElementById('memberBarangay');
+    
+    if (!regionSelect || !provinceSelect || !citySelect) return;
+    
+    const selectedRegion = regionSelect.value;
+    const selectedProvince = provinceSelect.value;
+    
+    // Reset dependent dropdowns
+    citySelect.innerHTML = '<option value="">-- Select City/Municipality --</option>';
+    barangaySelect.innerHTML = '<option value="">-- Select Barangay --</option>';
+    
+    // Disable dependent dropdowns
+    citySelect.disabled = !selectedProvince;
+    barangaySelect.disabled = true;
+    
+    if (selectedRegion && selectedProvince && 
+        philippineAddressData[selectedRegion] && 
+        philippineAddressData[selectedRegion][selectedProvince]) {
+        
+        Object.keys(philippineAddressData[selectedRegion][selectedProvince]).forEach(city => {
+            const option = document.createElement('option');
+            option.value = city;
+            option.textContent = city;
+            citySelect.appendChild(option);
+        });
+    }
+}
+
+// Populate barangays based on selected city
+function populateBarangays() {
+    const regionSelect = document.getElementById('memberRegion');
+    const provinceSelect = document.getElementById('memberProvince');
+    const citySelect = document.getElementById('memberCity');
+    const barangaySelect = document.getElementById('memberBarangay');
+    
+    if (!regionSelect || !provinceSelect || !citySelect || !barangaySelect) return;
+    
+    const selectedRegion = regionSelect.value;
+    const selectedProvince = provinceSelect.value;
+    const selectedCity = citySelect.value;
+    
+    // Reset barangay dropdown
+    barangaySelect.innerHTML = '<option value="">-- Select Barangay --</option>';
+    barangaySelect.disabled = !selectedCity;
+    
+    if (selectedRegion && selectedProvince && selectedCity &&
+        philippineAddressData[selectedRegion] && 
+        philippineAddressData[selectedRegion][selectedProvince] &&
+        philippineAddressData[selectedRegion][selectedProvince][selectedCity]) {
+        
+        philippineAddressData[selectedRegion][selectedProvince][selectedCity].forEach(barangay => {
+            const option = document.createElement('option');
+            option.value = barangay;
+            option.textContent = barangay;
+            barangaySelect.appendChild(option);
+        });
+    }
+}
+
+// Get complete address string
+function getCompleteAddress() {
+    const region = document.getElementById('memberRegion').value;
+    const province = document.getElementById('memberProvince').value;
+    const city = document.getElementById('memberCity').value;
+    const barangay = document.getElementById('memberBarangay').value;
+    const street = document.getElementById('memberStreet').value;
+    
+    let address = '';
+    if (street) address += street + ', ';
+    if (barangay) address += barangay + ', ';
+    if (city) address += city + ', ';
+    if (province) address += province + ', ';
+    if (region) address += region;
+    
+    return address.replace(/,\s*$/, ''); // Remove trailing comma
+}
+
+// Phone number validation function
+function validatePhilippineMobile(phoneNumber) {
+    // Remove any spaces or dashes
+    const cleanPhone = phoneNumber.replace(/[\s-]/g, '');
+    
+    // Check if it's exactly 11 digits and starts with 09
+    const phonePattern = /^09[0-9]{9}$/;
+    return phonePattern.test(cleanPhone);
+}
+
+// MAC address validation function
+function validateMacAddress(macAddress) {
+    // Remove any spaces
+    const cleanMac = macAddress.replace(/\s/g, '');
+    
+    // Check if it matches MAC address pattern (XX:XX:XX:XX:XX:XX or XX-XX-XX-XX-XX-XX)
+    const macPattern = /^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/;
+    return macPattern.test(cleanMac);
+}
+
+// Auto-format MAC address with colons
+function formatMacAddress(input) {
+    // Remove all non-hexadecimal characters
+    let value = input.value.replace(/[^0-9A-Fa-f]/g, '');
+    
+    // Limit to 12 characters (6 pairs)
+    if (value.length > 12) {
+        value = value.substring(0, 12);
+    }
+    
+    // Add colons every 2 characters
+    let formatted = '';
+    for (let i = 0; i < value.length; i += 2) {
+        if (i > 0) formatted += ':';
+        formatted += value.substring(i, i + 2);
+    }
+    
+    input.value = formatted.toUpperCase();
+}
+
 // Handle form submission
 document.getElementById('unifiedForm').addEventListener('submit', function(e) {
     e.preventDefault();
     
+    const phoneInput = document.getElementById('memberPhone').value;
+    
+    // Validate phone number format
+    if (!validatePhilippineMobile(phoneInput)) {
+        alert('❌ Invalid phone number format!\nPlease enter a valid Philippine mobile number (11 digits starting with 09).\nExample: 09123456789');
+        document.getElementById('memberPhone').focus();
+        return;
+    }
+    
+    // Validate address fields
+    const region = document.getElementById('memberRegion').value;
+    const province = document.getElementById('memberProvince').value;
+    const city = document.getElementById('memberCity').value;
+    const barangay = document.getElementById('memberBarangay').value;
+    
+    if (!region || !province || !city || !barangay) {
+        alert('❌ Please complete all address fields!\nRegion, Province, City/Municipality, and Barangay are required.');
+        return;
+    }
+    
     const registrationType = document.getElementById('registrationType').value;
+    
+    // Validate MAC address for WiFi sharers (hexadecimal format)
+    if (registrationType === 'wifi') {
+        const macAddress = document.getElementById('memberMacAddress').value;
+        if (!macAddress) {
+            alert('❌ Antenna MAC Address is required for WiFi Sharers!');
+            document.getElementById('memberMacAddress').focus();
+            return;
+        }
+        // Check if it contains only hexadecimal characters and colons
+        const hexPattern = /^[0-9A-Fa-f:]+$/;
+        if (!hexPattern.test(macAddress) || !macAddress.includes(':')) {
+            alert('❌ Invalid MAC Address format!\nPlease enter hexadecimal characters with colons (0-9, A-F, :)\nExample: 00:1A:2B:3C:4D:5E');
+            document.getElementById('memberMacAddress').focus();
+            return;
+        }
+    }
     const memberData = {
         name: document.getElementById('memberName').value,
-        phone: document.getElementById('memberPhone').value,
-        address: document.getElementById('memberAddress').value,
+        phone: phoneInput,
+        address: getCompleteAddress(),
+        region: region,
+        province: province,
+        city: city,
+        barangay: barangay,
+        street: document.getElementById('memberStreet').value || '',
         registrationDate: new Date().toLocaleDateString()
     };
     
@@ -1454,8 +1930,8 @@ document.getElementById('unifiedForm').addEventListener('submit', function(e) {
         case 'wifi':
             memberData.id = 'WFS' + String(wifiSharerData.length + 1).padStart(3, '0');
             memberData.agent = document.getElementById('memberAgent').value;
-            memberData.barangay = document.getElementById('memberBarangay').value;
             memberData.targetUsers = document.getElementById('memberTargetUsers').value;
+            memberData.macAddress = document.getElementById('memberMacAddress').value;
             wifiSharerData.push(memberData);
             localStorage.setItem('wifiSharerData', JSON.stringify(wifiSharerData));
             break;
@@ -1548,6 +2024,29 @@ function checkComprehensiveAdminPassword() {
 function logoutComprehensiveAdmin() {
     document.getElementById('comprehensiveAdminLoginSection').style.display = 'block';
     document.getElementById('comprehensiveControlsSection').style.display = 'none';
+}
+
+// Member Registration Admin Password Functions
+function checkMemberRegistrationAdminPassword() {
+    const password = document.getElementById('memberRegistrationAdminPassword').value;
+    if (password === ADMIN_PASSWORD) {
+        document.getElementById('memberRegistrationPasswordSection').style.display = 'none';
+        document.getElementById('memberRegistrationFormSection').style.display = 'block';
+        document.getElementById('memberRegistrationAdminPassword').value = '';
+        alert('✅ Admin access granted for Member Registration!');
+    } else {
+        alert('❌ Incorrect admin password!');
+        document.getElementById('memberRegistrationAdminPassword').value = '';
+    }
+}
+
+function logoutMemberRegistrationAdmin() {
+    document.getElementById('memberRegistrationPasswordSection').style.display = 'block';
+    document.getElementById('memberRegistrationFormSection').style.display = 'none';
+    // Reset any form data when logging out
+    document.getElementById('registrationType').value = '';
+    document.getElementById('unifiedFormContainer').style.display = 'none';
+    document.getElementById('memberIdPreview').textContent = '---';
 }
 
 function handleSalesSubmission(e) {
@@ -1960,6 +2459,7 @@ function updateWifiSharerReport() {
             <td class="border px-2 py-1">${agent.name || 'N/A'}</td>
             <td class="border px-2 py-1">${wifiSharer.barangay || 'N/A'}</td>
             <td class="border px-2 py-1">${wifiSharer.targetUsers || 'N/A'}</td>
+            <td class="border px-2 py-1">${wifiSharer.macAddress || 'N/A'}</td>
             <td class="border px-2 py-1">₱${totalSales.toLocaleString()}</td>
             <td class="border px-2 py-1">₱${agentCommission.toLocaleString()}</td>
             <td class="border px-2 py-1">₱${wifiPersonal.toLocaleString()}</td>
@@ -2154,6 +2654,7 @@ function exportComprehensiveReport() {
             'Agent Name': agent.name || 'N/A',
             'Barangay': wifiSharer.barangay || 'N/A',
             'Target Users': wifiSharer.targetUsers || 'N/A',
+            'MAC Address': wifiSharer.macAddress || 'N/A',
             'Total Sales': totalSales,
             'Agent Commission (5%)': totalSales * 0.05,
             'WiFi Personal (40%)': totalSales * 0.40,
@@ -2373,6 +2874,8 @@ window.checkDataAdminPassword = checkDataAdminPassword;
 window.logoutDataAdmin = logoutDataAdmin;
 window.checkComprehensiveAdminPassword = checkComprehensiveAdminPassword;
 window.logoutComprehensiveAdmin = logoutComprehensiveAdmin;
+window.checkMemberRegistrationAdminPassword = checkMemberRegistrationAdminPassword;
+window.logoutMemberRegistrationAdmin = logoutMemberRegistrationAdmin;
 window.showRegistrationForm = showRegistrationForm;
 window.exportComprehensiveReport = exportComprehensiveReport;
 window.importComprehensiveReport = importComprehensiveReport;
