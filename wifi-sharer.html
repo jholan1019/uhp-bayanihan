@@ -251,19 +251,22 @@
                         </div>
                         
                         <div class="bg-white p-4 rounded-lg border-l-4 border-blue-500">
-                            <h4 class="font-bold text-gray-700">Your Personal Share (40%)</h4>
-                            <p class="text-2xl font-bold text-blue-600" id="personalShare">₱6,000</p>
-                        </div>
-                        
-                        <div class="bg-white p-4 rounded-lg border-l-4 border-purple-500">
-                            <h4 class="font-bold text-gray-700">Community Pool Share</h4>
-                            <p class="text-xl font-bold text-purple-600" id="communityShare">₱4,500</p>
-                            <p class="text-xs text-gray-600">Shared among all WiFi & Antenna members</p>
-                        </div>
-                        
-                        <div class="bg-white p-4 rounded-lg border-l-4 border-orange-500">
-                            <h4 class="font-bold text-gray-700">Annual Personal Income</h4>
-                            <p class="text-2xl font-bold text-orange-600" id="annualIncome">₱72,000</p>
+                            <!-- Income card labels -->
+                            <div class="bg-white rounded-lg shadow p-6">
+                                <h4 class="font-bold text-gray-700">Your Personal Share (50%)</h4>
+                                <p class="text-2xl font-bold text-blue-600" id="personalShare">₱6,000</p>
+                            </div>
+                            
+                            <div class="bg-white p-4 rounded-lg border-l-4 border-purple-500">
+                                <h4 class="font-bold text-gray-700">Community Pool Share</h4>
+                                <p class="text-xl font-bold text-purple-600" id="communityShare">₱4,500</p>
+                                <p class="text-xs text-gray-600">Shared among all WiFi & Antenna members</p>
+                            </div>
+                            
+                            <div class="bg-white p-4 rounded-lg border-l-4 border-orange-500">
+                                <h4 class="font-bold text-gray-700">Annual Personal Income</h4>
+                                <p class="text-2xl font-bold text-orange-600" id="annualIncome">₱72,000</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -350,12 +353,12 @@ function calculateIncome() {
     const dailyUsers = parseInt(document.getElementById('dailyUsers').value) || 0;
     const voucherPrice = parseInt(document.getElementById('voucherPrice').value) || 0;
     const operatingDays = parseInt(document.getElementById('operatingDays').value) || 0;
-    
+
     const monthlyGross = dailyUsers * voucherPrice * operatingDays;
-    const personalShare = monthlyGross * 0.40;
-    const communityShare = monthlyGross * 0.30;
+    const personalShare = monthlyGross * 0.50;
+    const communityShare = monthlyGross * 0.70;
     const annualPersonal = personalShare * 12;
-    
+
     document.getElementById('grossRevenue').textContent = `₱${monthlyGross.toLocaleString()}`;
     document.getElementById('personalShare').textContent = `₱${personalShare.toLocaleString()}`;
     document.getElementById('communityShare').textContent = `₱${communityShare.toLocaleString()}`;
