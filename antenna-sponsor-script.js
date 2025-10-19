@@ -65,7 +65,7 @@ function getRealFinancialData() {
         const totalRevenue = totalSalesAmount + totalEwalletAmount;
         
         // Calculate community pool (same logic as UHP ecosystem)
-        const voucherPoolAmount = totalSalesAmount * 0.50; // 50% of voucher sales
+        const voucherPoolAmount = totalSalesAmount * 0.70; // 70% of voucher sales
         const ewalletPoolAmount = totalEwalletAmount * 0.70; // 70% of ewallet income
         const communityPool = voucherPoolAmount + ewalletPoolAmount;
         
