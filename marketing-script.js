@@ -5,8 +5,8 @@ function calculateIncome() {
     const eWalletIncome = parseFloat(document.getElementById('eWalletIncome').value) || 0;
     
     // Calculate commissions
-    const personalCommission = personalSales * 0.40;
-    const revenueShare = totalRevenue * 0.50;
+    const personalCommission = personalSales * 0.50;
+    const revenueShare = totalRevenue * 0.70;
     const eWalletCommission = eWalletIncome * 0.70;
     const totalEarnings = personalCommission + revenueShare + eWalletCommission;
     
