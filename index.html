@@ -109,6 +109,16 @@ body {
   }
 </script>
 
+<!-- Video Carousel Banner (16:9 at top) -->
+<section id="video-carousel" class="relative w-full overflow-hidden bg-black" style="aspect-ratio: 16 / 9;">
+  <div id="videoSlides" class="absolute inset-0 flex transition-transform duration-700 ease-in-out"></div>
+  <button id="prevBtn" aria-label="Previous"
+    class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 text-black p-3 rounded-full backdrop-blur-sm">‹</button>
+  <button id="nextBtn" aria-label="Next"
+    class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 text-black p-3 rounded-full backdrop-blur-sm">›</button>
+  <div id="dots" class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2"></div>
+</section>
+
 <!-- Hero Section -->
 <section class="py-20 text-center text-white">
     <div class="container mx-auto px-6">
@@ -1097,6 +1107,225 @@ function importExcelData(event) {
 function clearAllDataWithPassword() {
     showPasswordModal('clear');
 }
+</script>
+
+<!-- Facebook Reel Modal (single video, no extra reels) -->
+<div id="fbReelModal" class="fixed inset-0 bg-black/70 hidden z-50">
+  <div class="absolute inset-0 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="Facebook Reel Modal">
+    <div class="relative bg-black rounded-lg shadow-lg w-full max-w-4xl">
+      <button id="fbReelClose" aria-label="Close"
+        class="absolute -top-3 -right-3 bg-white text-black rounded-full w-8 h-8 flex items-center justify-center shadow">×</button>
+      <div class="w-full" style="aspect-ratio: 16 / 9;">
+        <div id="fbReelContainer" class="w-full h-full">
+          <div class="fb-video" data-href="https://www.facebook.com/reel/1327699132389486" data-width="800" data-show-text="false" data-allowfullscreen="true"></div>
+        </div>
+      </div>
+      <div class="p-3 flex flex-wrap gap-2 justify-center">
+        <button class="px-3 py-1 rounded bg-white/20 hover:bg-white/40 text-black text-sm" data-reel-index="0">Reel 1</button>
+        <button class="px-3 py-1 rounded bg-white/20 hover:bg-white/40 text-black text-sm" data-reel-index="1">Reel 2</button>
+        <button class="px-3 py-1 rounded bg-white/20 hover:bg-white/40 text-black text-sm" data-reel-index="2">Reel 3</button>
+        <button class="px-3 py-1 rounded bg-white/20 hover:bg-white/40 text-black text-sm" data-reel-index="3">Reel 4</button>
+      </div>
+    </div>
+  </div>
+  <div id="fb-root"></div>
+</div>
+
+<!-- Facebook SDK -->
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v20.0"></script>
+
+<!-- FB Reel Modal Logic -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const fbReelLink = document.getElementById('fbReelLink');
+    const fbReelModal = document.getElementById('fbReelModal');
+    const fbReelClose = document.getElementById('fbReelClose');
+    const fbReelContainer = document.getElementById('fbReelContainer');
+
+    const fbReels = [
+      'https://www.facebook.com/reel/1253635886800369',
+      'https://www.facebook.com/reel/1874665070091761',
+      'https://www.facebook.com/reel/1404681131309717',
+      'https://www.facebook.com/reel/877334811290853'
+    ];
+
+    function renderFbReel(url) {
+      if (!fbReelContainer) return;
+      fbReelContainer.innerHTML = `<iframe src="https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false&autoplay=true" width="100%" height="100%" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen="true"></iframe>`;
+    }
+
+    if (fbReelLink && fbReelModal) {
+      fbReelLink.addEventListener('click', (e) => {
+        // Open modal instead of navigating away
+        e.preventDefault();
+        fbReelModal.classList.remove('hidden');
+        // Default to first reel
+        renderFbReel(fbReels[0]);
+      });
+    }
+
+    if (fbReelClose) {
+      fbReelClose.addEventListener('click', () => {
+        fbReelModal.classList.add('hidden');
+      });
+    }
+
+    // Close when clicking outside the content
+    fbReelModal?.addEventListener('click', (e) => {
+      if (e.target === fbReelModal) {
+        fbReelModal.classList.add('hidden');
+      }
+    });
+
+    // Reel selector buttons
+    document.querySelectorAll('#fbReelModal [data-reel-index]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = parseInt(btn.getAttribute('data-reel-index'), 10);
+        const url = fbReels[idx] || fbReels[0];
+        renderFbReel(url);
+      });
+    });
+  });
+</script>
+
+<!-- Home Video Carousel Script -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const fbReelsCarousel = [
+      'https://www.facebook.com/reel/2322077968231654',
+      'https://www.facebook.com/reel/1253635886800369',
+      'https://www.facebook.com/reel/1874665070091761',
+      'https://www.facebook.com/reel/1404681131309717',
+      'https://www.facebook.com/reel/877334811290853'
+    ];
+
+    // Fallback Facebook Reels (used if local video fails to load/play)
+    const fbReelsFallback = fbReelsCarousel;
+
+    const slidesContainer = document.getElementById('videoSlides');
+    const dotsContainer = document.getElementById('dots');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const audioToggle = document.getElementById('audioToggle');
+    const carousel = document.getElementById('video-carousel');
+
+    let current = 0;
+    let intervalId = null;
+    let soundOn = false; // enable audio only after user interaction (not for FB embeds)
+    const renderedFlags = Array(fbReelsCarousel.length).fill(false);
+
+    function renderFbEmbedInto(container, url) {
+      if (!container) return;
+      container.innerHTML = `<iframe src="https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false&autoplay=true" width="100%" height="100%" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen="true"></iframe>`;
+    }
+
+    function replaceWithFbReel(slide, url) {
+      if (!slide) return;
+      slide.innerHTML = `<div class="w-full h-full" style="aspect-ratio: 16 / 9;"><iframe src="https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false&autoplay=true" width="100%" height="100%" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen="true"></iframe></div>`;
+    }
+
+    function createSlides() {
+      fbReelsCarousel.forEach((url, idx) => {
+        const slide = document.createElement('div');
+        slide.className = 'w-full h-full flex-shrink-0 relative';
+
+        const slot = document.createElement('div');
+        slot.className = 'w-full h-full';
+        slot.style.aspectRatio = '16 / 9';
+        slide.appendChild(slot);
+        slidesContainer.appendChild(slide);
+
+        const dot = document.createElement('button');
+        dot.className = 'w-2.5 h-2.5 rounded-full ' + (idx === 0 ? 'bg-white' : 'bg-white/40');
+        dot.setAttribute('aria-label', 'Go to slide ' + (idx + 1));
+        dot.addEventListener('click', () => goTo(idx));
+        dotsContainer.appendChild(dot);
+      });
+
+      updateTransform();
+      playActive();
+    }
+
+    function updateTransform() {
+      slidesContainer.style.transform = `translateX(-${current * 100}%)`;
+
+      Array.from(dotsContainer.children).forEach((dot, i) => {
+        dot.classList.toggle('bg-white', i === current);
+        dot.classList.toggle('bg-white/40', i !== current);
+      });
+    }
+
+    function playActive() {
+      const slides = slidesContainer.children;
+      Array.from(slides).forEach((slide, i) => {
+        const slot = slide.firstElementChild;
+        if (!slot) return;
+        if (i === current) {
+          if (!renderedFlags[i]) {
+            renderFbEmbedInto(slot, fbReelsCarousel[i]);
+            renderedFlags[i] = true;
+          }
+        } else {
+          slot.innerHTML = '';
+          renderedFlags[i] = false;
+        }
+      });
+      if (audioToggle) audioToggle.textContent = soundOn ? 'Sound On' : 'Sound Off';
+    }
+
+    function next() {
+      current = (current + 1) % fbReelsCarousel.length;
+      updateTransform();
+      playActive();
+    }
+
+    function prev() {
+      current = (current - 1 + fbReelsCarousel.length) % fbReelsCarousel.length;
+      updateTransform();
+      playActive();
+    }
+
+    function goTo(idx) {
+      current = idx % fbReelsCarousel.length;
+      updateTransform();
+      playActive();
+    }
+
+    function startAuto() {
+      stopAuto();
+      intervalId = setInterval(next, 8000); // advance every 8s
+    }
+
+    function stopAuto() {
+      if (intervalId) {
+        clearInterval(intervalId);
+        intervalId = null;
+      }
+    }
+
+    nextBtn.addEventListener('click', () => { next(); });
+    prevBtn.addEventListener('click', () => { prev(); });
+
+    // Sound toggle
+    if (audioToggle) {
+      audioToggle.addEventListener('click', () => {
+        soundOn = !soundOn;
+        playActive();
+      });
+    }
+
+    // Kick autoplay after first user interaction for stricter browsers
+    document.addEventListener('click', () => {
+      playActive();
+    }, { once: true });
+
+    // Pause auto-advance on hover
+    carousel.addEventListener('mouseenter', stopAuto);
+    carousel.addEventListener('mouseleave', startAuto);
+
+    createSlides();
+    startAuto();
+  });
 </script>
 
 </body>
