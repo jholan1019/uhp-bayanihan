@@ -73,6 +73,8 @@ body {
     background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #667eea 100%);
     min-height: 100vh;
 }
+/* Ensure carousel sits lower than fixed header */
+#video-carousel { margin-top: 20px; }
 </style>
 </head>
 <body class="bg-gray-100 font-sans text-gray-800" style="font-family: 'Montserrat', sans-serif;">
@@ -1211,17 +1213,32 @@ function clearAllDataWithPassword() {
 
     let current = 0;
     let intervalId = null;
+    let fallbackId = null; // safety timer if FB 'finished' doesn't fire
     let soundOn = false; // enable audio only after user interaction (not for FB embeds)
     const renderedFlags = Array(fbReelsCarousel.length).fill(false);
 
     function renderFbEmbedInto(container, url) {
       if (!container) return;
-      container.innerHTML = `<iframe src="https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false&autoplay=true" width="100%" height="100%" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen="true"></iframe>`;
+      // Always render iframe plugin to avoid SDK/XFBML dependency across redirects and file://
+      container.innerHTML = `
+        <div class="w-full h-full" style="aspect-ratio:16/9; position: relative;">
+          <iframe src="https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false&autoplay=true" width="100%" height="100%" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen="true"></iframe>
+          <div style="position:absolute; bottom:8px; right:8px; background:rgba(0,0,0,.6); color:#fff; padding:6px 10px; border-radius:6px; font-size:12px;">
+            <a href="${url}" target="_blank" rel="noopener" style="color:#fff; text-decoration:none;">Open on Facebook</a>
+          </div>
+        </div>`;
     }
 
     function replaceWithFbReel(slide, url) {
       if (!slide) return;
-      slide.innerHTML = `<div class="w-full h-full" style="aspect-ratio: 16 / 9;"><iframe src="https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false&autoplay=true" width="100%" height="100%" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen="true"></iframe></div>`;
+      // Always render iframe plugin to avoid SDK/XFBML dependency across redirects and file://
+      slide.innerHTML = `
+        <div class="w-full h-full" style="aspect-ratio: 16 / 9; position: relative;">
+          <iframe src="https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false&autoplay=true" width="100%" height="100%" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen="true"></iframe>
+          <div style="position:absolute; bottom:8px; right:8px; background:rgba(0,0,0,.6); color:#fff; padding:6px 10px; border-radius:6px; font-size:12px;">
+            <a href="${url}" target="_blank" rel="noopener" style="color:#fff; text-decoration:none;">Open on Facebook</a>
+          </div>
+        </div>`;
     }
 
     function createSlides() {
@@ -1301,6 +1318,10 @@ function clearAllDataWithPassword() {
         clearInterval(intervalId);
         intervalId = null;
       }
+      if (fallbackId) {
+        clearTimeout(fallbackId);
+        fallbackId = null;
+      }
     }
 
     nextBtn.addEventListener('click', () => { next(); });
@@ -1319,12 +1340,33 @@ function clearAllDataWithPassword() {
       playActive();
     }, { once: true });
 
-    // Pause auto-advance on hover
-    carousel.addEventListener('mouseenter', stopAuto);
-    carousel.addEventListener('mouseleave', startAuto);
+    // Continuous auto-advance (no hover pause)
 
     createSlides();
     startAuto();
+
+    // Ensure timers behave correctly across redirects and background tabs
+    function ensureAutoOnVisible() {
+      if (document.visibilityState === 'visible') {
+        startAuto();
+        playActive();
+      } else {
+        stopAuto();
+      }
+    }
+
+    window.addEventListener('visibilitychange', ensureAutoOnVisible);
+    window.addEventListener('focus', ensureAutoOnVisible);
+    window.addEventListener('blur', ensureAutoOnVisible);
+    window.addEventListener('pageshow', ensureAutoOnVisible);
+
+    // Disable video-aware pause; retain simple 8s auto-advance for reliability
+    const videoAware = false;
+    if (videoAware && window.FB && FB.Event && FB.Event.subscribe) {
+      FB.Event.subscribe('xfbml.ready', (msg) => {
+        // Original event-driven logic intentionally disabled
+      });
+    }
   });
 </script>
 
